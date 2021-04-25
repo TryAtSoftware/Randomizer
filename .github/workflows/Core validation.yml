@@ -13,6 +13,7 @@ jobs:
     env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        CONFIGURATION: Release
 
     steps:
     - uses: actions/checkout@v2
@@ -26,14 +27,14 @@ jobs:
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
       with:
-        path: ~\sonar\cache
+        path: ~/sonar/cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
     - name: Cache SonarCloud scanner
       id: cache-sonar-scanner
       uses: actions/cache@v1
       with:
-        path: .\.sonar\scanner
+        path: ./.sonar/scanner
         key: ${{ runner.os }}-sonar-scanner
         restore-keys: ${{ runner.os }}-sonar-scanner
     - name: Install SonarCloud scanner
@@ -46,9 +47,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build the solution
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration "${{ env.CONFIGURATION }}"
     - name: Test the solution
-      run: dotnet test --no-build --collect "Code coverage"
+      run: dotnet test --no-build --configuration "${{ env.CONFIGURATION }}" --collect "Code coverage"
     
     - name: Finalize analyzation with SonarCloud
       run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
