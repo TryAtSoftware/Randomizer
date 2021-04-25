@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography;
     using System.Text;
     using JetBrains.Annotations;
 
@@ -12,12 +13,13 @@
         public static string UpperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public static string Digits = "0123456789";
 
-        public static Random Random { get; } = new Random();
+        public static int GetRandomNumber(int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(exclusiveUpperBound);
+        public static int GetRandomNumber(int inclusiveBottomBound, int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(inclusiveBottomBound, exclusiveUpperBound);
 
         public static string RandomString()
         {
             var charactersMask = $"{LowerCaseLetters}{UpperCaseLetters}{Digits}";
-            return RandomString(Random.Next(30, 80), charactersMask);
+            return RandomString(GetRandomNumber(30, 80), charactersMask);
         }
 
         public static string RandomString(int length, [NotNull] string charactersMask)
@@ -41,17 +43,21 @@
             var sb = new StringBuilder(length);
 
             for (var i = 0; i < length; i++)
-                sb.Append(possibleChars[Random.Next(possibleChars.Count)]);
+                sb.Append(possibleChars[GetRandomNumber(possibleChars.Count)]);
 
             return sb.ToString();
         }
 
-        public static bool RandomProbability(int percents = 50) => Random.Next(100) < percents;
+        public static bool RandomProbability(int percents = 50) => RandomNumberGenerator.GetInt32(100) < percents;
 
         public static DateTimeOffset GetRandomDate(bool historical = false)
         {
-            var randTimeSpan = new TimeSpan((long) (Random.NextDouble() * DateTimeOffset.Now.Ticks));
-
+            var randomRepetitionsCount = GetRandomNumber(3, 6);
+            long ticks = 1;
+            for (var i = 0; i < randomRepetitionsCount; i++)
+                ticks *= GetRandomNumber(10, 1000);
+            
+            var randTimeSpan = new TimeSpan(ticks);
             return historical ? DateTimeOffset.Now.Add(-randTimeSpan) : DateTimeOffset.Now.Add(randTimeSpan);
         }
     }

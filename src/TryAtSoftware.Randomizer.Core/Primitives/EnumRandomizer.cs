@@ -1,6 +1,7 @@
 ﻿namespace TryAtSoftware.Randomizer.Core.Primitives
 {
     using System;
+    using System.Security.Cryptography;
     using TryAtSoftware.Randomizer.Core.Helpers;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 
@@ -10,7 +11,7 @@
         public TEnum PrepareRandomValue()
         {
             var values = Enum.GetValues(typeof(TEnum));
-            var randomIndex = RandomizationHelper.Random.Next(values.Length);
+            var randomIndex = RandomizationHelper.GetRandomNumber(values.Length);
             return (TEnum)values.GetValue(randomIndex);
         }
     }
