@@ -19,6 +19,11 @@ jobs:
       with:
         dotnet-version: 5.0.x
    
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Install SonarScanner as a global tool
       run: dotnet tool install --global dotnet-sonarscanner
       
