@@ -10,6 +10,9 @@ jobs:
   build:
     name: Validate core functionality
     runs-on: ubuntu-latest
+    env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
     - uses: actions/checkout@v2
@@ -20,17 +23,32 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v1
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v1
+      with:
+        path: .\.sonar\scanner
+        key: ${{ runner.os }}-sonar-scanner
+        restore-keys: ${{ runner.os }}-sonar-scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      run: dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      
+    - name: Start analyzation with SonarCloud
+      run: dotnet-sonarscanner begin /k:"TryAtSoftware_Randomizer" /o:"tryatsoftware" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+
     - name: Restore dependencies
       run: dotnet restore
     - name: Build the solution
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
     - name: Test the solution
       run: dotnet test --no-build --verbosity normal --collect "Code coverage"
     
-    - name: Prepare SonarCloud
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: -Dsonar.organization=tryatsoftware -Dsonar.projectKey=TryAtSoftware_Randomizer
+    - name: Finalize analyzation with SonarCloud
+      run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
