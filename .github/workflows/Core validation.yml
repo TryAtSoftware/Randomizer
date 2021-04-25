@@ -48,7 +48,7 @@ jobs:
     - name: Build the solution
       run: dotnet build --no-restore --configuration Release
     - name: Test the solution
-      run: dotnet test --no-build --verbosity normal --collect "Code coverage"
+      run: dotnet test --no-build --collect "Code coverage"
     
     - name: Finalize analyzation with SonarCloud
       run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
