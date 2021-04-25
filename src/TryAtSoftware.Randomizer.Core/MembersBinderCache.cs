@@ -12,6 +12,6 @@
 
         // NOTE: Tony Troeff, 18/04/2021 - This is the idea of this class - to provide a single `IMembersBinder` instance for any requested type represented by the generic parameter.
         // ReSharper disable once StaticMemberInGenericType
-        public static IMembersBinder Binder { get; }
+        public static IMembersBinder<TEntity> Binder { get; }
     }
 }

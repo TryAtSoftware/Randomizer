@@ -8,7 +8,7 @@
     using JetBrains.Annotations;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 
-    public class MembersBinder<TEntity> : IMembersBinder
+    public class MembersBinder<TEntity> : IMembersBinder<TEntity>
         where TEntity : class
     {
         private const BindingFlags GET_MEMBERS_BINDING_FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;

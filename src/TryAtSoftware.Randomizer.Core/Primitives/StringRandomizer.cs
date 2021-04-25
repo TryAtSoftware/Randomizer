@@ -7,6 +7,6 @@
     public class StringRandomizer : IRandomizer<string>
     {
         /// <inheritdoc />
-        public string PrepareRandomValue() => RandomizationHelper.RandomString();
+        public string PrepareRandomValue() => RandomizationHelper.GetRandomString();
     }
 }
