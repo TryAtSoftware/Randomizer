@@ -10,9 +10,9 @@
     {
         private readonly string _propertyName;
         private readonly IRandomizer<TValue> _randomizer;
-        private readonly IMembersBinder _binder;
+        private readonly IMembersBinder<TEntity> _binder;
 
-        public RandomValueSetter([NotNull] string propertyName, [NotNull] IRandomizer<TValue> randomizer, [NotNull] IMembersBinder membersBinder)
+        public RandomValueSetter([NotNull] string propertyName, [NotNull] IRandomizer<TValue> randomizer, [NotNull] IMembersBinder<TEntity> membersBinder)
         {
             this._propertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
             this._randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
