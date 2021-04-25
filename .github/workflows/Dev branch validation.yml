@@ -1,4 +1,4 @@
-name: .NET
+name: Dev branch validation
 
 on:
   push:
