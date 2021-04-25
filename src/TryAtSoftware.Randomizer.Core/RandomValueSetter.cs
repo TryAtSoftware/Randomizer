@@ -21,7 +21,7 @@
 
         public void SetValue(TEntity instance)
         {
-            if (instance is null || this._binder.MemberInfos.TryGetValue(this._propertyName, out var memberInfo) == false)
+            if (instance is null || !this._binder.MemberInfos.TryGetValue(this._propertyName, out var memberInfo))
                 return;
 
             var value = this._randomizer.PrepareRandomValue();

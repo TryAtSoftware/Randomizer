@@ -2,7 +2,7 @@ namespace TryAtSoftware.Randomizer.Core.Tests
 {
     using System.Collections.Generic;
 
-    public class TestsHelper
+    public static class TestsHelper
     {
         public static IEnumerable<object[]> GetInvalidStringParameters()
         {
