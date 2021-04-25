@@ -5,6 +5,6 @@ namespace TryAtSoftware.Randomizer.Core.Tests.InstanceBuilders
 
     public class PersonInstanceBuilder : IInstanceBuilder<Person>
     {
-        public Person PrepareNewInstance() => new Person();
+        public Person PrepareNewInstance() => new();
     }
 }

@@ -22,7 +22,7 @@ namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization
 
             var secondPerson = complexRandomizer.PrepareRandomValue();
             Assert.NotSame(firstPerson, secondPerson);
-            Assert.NotEqual(firstPerson, secondPerson);
+            Assert.NotEqual(firstPerson, secondPerson, new PeopleComparer());
         }
     }
 }

@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
    
-    - name: SonarCloud Scan
+    - name: Prepare SonarCloud
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
     - name: Build the solution
       run: dotnet build --no-restore
     - name: Test the solution
-      run: dotnet test --no-build --verbosity normal --collect="Code coverage"
+      run: dotnet test --no-build --verbosity normal --collect "Code coverage"
     
     - name: Finalize analyzation with SonarCloud
       run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
