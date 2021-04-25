@@ -1,7 +1,6 @@
 ﻿namespace TryAtSoftware.Randomizer.Core.Primitives
 {
     using System;
-    using System.Security.Cryptography;
     using TryAtSoftware.Randomizer.Core.Helpers;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 

@@ -19,6 +19,6 @@ namespace TryAtSoftware.Randomizer.Core.Tests.Models
             return x.Id.Equals(y.Id) && string.Equals(x.Name, y.Name, StringComparison.Ordinal) && x.IsEmployed == y.IsEmployed && x.Age == y.Age;
         }
 
-        public int GetHashCode(Person person) => HashCode.Combine(person.Id, person.Name, person.IsEmployed, person.Age);
+        public int GetHashCode(Person obj) => HashCode.Combine(obj.Id, obj.Name, obj.IsEmployed, obj.Age);
     }
 }
