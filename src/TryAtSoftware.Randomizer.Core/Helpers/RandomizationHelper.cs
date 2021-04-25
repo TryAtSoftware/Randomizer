@@ -7,18 +7,18 @@
     using System.Text;
     using JetBrains.Annotations;
 
-    public class RandomizationHelper
+    public static class RandomizationHelper
     {
-        public static string LowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
-        public static string UpperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        public static string Digits = "0123456789";
+        public const string LOWER_CASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+        public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public const string DIGITS = "0123456789";
 
         public static int GetRandomNumber(int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(exclusiveUpperBound);
         public static int GetRandomNumber(int inclusiveBottomBound, int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(inclusiveBottomBound, exclusiveUpperBound);
 
         public static string RandomString()
         {
-            var charactersMask = $"{LowerCaseLetters}{UpperCaseLetters}{Digits}";
+            var charactersMask = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
             return RandomString(GetRandomNumber(30, 80), charactersMask);
         }
 
