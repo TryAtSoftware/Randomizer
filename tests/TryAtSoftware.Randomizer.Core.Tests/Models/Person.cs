@@ -10,5 +10,6 @@ namespace TryAtSoftware.Randomizer.Core.Tests.Models
         public string Name { get; set; }
         public bool IsEmployed { get; set; }
         public int Age { get; set; }
+        public DateTimeOffset EventDate { get; set; }
     }
 }

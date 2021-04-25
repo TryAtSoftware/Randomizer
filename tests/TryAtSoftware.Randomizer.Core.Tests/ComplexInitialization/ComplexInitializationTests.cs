@@ -16,6 +16,7 @@ namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization
             complexRandomizer.AddRandomizationRule(p => p.Name, new StringRandomizer());
             complexRandomizer.AddRandomizationRule(p => p.Age, new NumberRandomizer());
             complexRandomizer.AddRandomizationRule(p => p.IsEmployed, new BooleanRandomizer());
+            complexRandomizer.AddRandomizationRule(p => p.EventDate, new DateTimeOffsetRandomizer());
 
             var firstPerson = complexRandomizer.PrepareRandomValue();
             Assert.NotNull(firstPerson);

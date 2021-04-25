@@ -16,13 +16,13 @@
         public static int GetRandomNumber(int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(exclusiveUpperBound);
         public static int GetRandomNumber(int inclusiveBottomBound, int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(inclusiveBottomBound, exclusiveUpperBound);
 
-        public static string RandomString()
+        public static string GetRandomString()
         {
             var charactersMask = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
-            return RandomString(GetRandomNumber(30, 80), charactersMask);
+            return GetRandomString(GetRandomNumber(30, 80), charactersMask);
         }
 
-        public static string RandomString(int length, [NotNull] string charactersMask)
+        public static string GetRandomString(int length, [NotNull] string charactersMask)
         {
             if (length <= 0)
                 throw new ArgumentOutOfRangeException(nameof(length));
