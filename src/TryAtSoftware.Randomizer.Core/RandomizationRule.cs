@@ -6,7 +6,7 @@
     using TryAtSoftware.Randomizer.Core.Helpers;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 
-    public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity, TValue>
+    public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
         where TEntity : class
     {
         public RandomizationRule([NotNull] Expression<Func<TEntity, TValue>> propertySelector, [NotNull] IRandomizer<TValue> randomizer)

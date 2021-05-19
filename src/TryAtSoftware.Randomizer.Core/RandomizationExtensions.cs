@@ -30,7 +30,7 @@
             complexRandomizer.OverrideRandomizationRule(rule);
         }
 
-        private static IRandomizationRule<TEntity, TValue> BuildRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
+        private static IRandomizationRule<TEntity> BuildRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
             where TEntity : class
             => new RandomizationRule<TEntity, TValue>(propertySelector, randomizer);
     }

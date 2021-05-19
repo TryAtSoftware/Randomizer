@@ -10,7 +10,7 @@
         public TEnum PrepareRandomValue()
         {
             var values = Enum.GetValues(typeof(TEnum));
-            var randomIndex = RandomizationHelper.GetRandomNumber(values.Length);
+            var randomIndex = RandomizationHelper.RandomInteger(0, values.Length);
             return (TEnum)values.GetValue(randomIndex);
         }
     }

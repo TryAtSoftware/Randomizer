@@ -8,7 +8,7 @@
         [NotNull]
         IInstanceBuilder<TEntity> InstanceBuilder { get; }
         
-        void AddRandomizationRule<TValue>(IRandomizationRule<TEntity, TValue> rule);
-        void OverrideRandomizationRule<TValue>(IRandomizationRule<TEntity, TValue> rule);
+        void AddRandomizationRule(IRandomizationRule<TEntity> rule);
+        void OverrideRandomizationRule(IRandomizationRule<TEntity> rule);
     }
 }

@@ -13,13 +13,28 @@
         public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public const string DIGITS = "0123456789";
 
-        public static int GetRandomNumber(int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(exclusiveUpperBound);
-        public static int GetRandomNumber(int inclusiveBottomBound, int exclusiveUpperBound) => RandomNumberGenerator.GetInt32(inclusiveBottomBound, exclusiveUpperBound);
+        public static int RandomInteger(int inclusiveBottomBound, int exclusiveUpperBound)
+        {
+            if (exclusiveUpperBound < inclusiveBottomBound)
+                throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than the minimum.");
+            if (inclusiveBottomBound == exclusiveUpperBound)
+                return inclusiveBottomBound;
+
+            using var rng = new RNGCryptoServiceProvider();
+            var data = new byte[4];
+            rng.GetBytes(data);
+
+            var generatedValue = BitConverter.ToInt32(data, startIndex: 0);
+
+            var difference = exclusiveUpperBound - inclusiveBottomBound;
+            var differenceOffset = Math.Abs(generatedValue) % difference;
+            return inclusiveBottomBound + differenceOffset;
+        }
 
         public static string GetRandomString()
         {
             var charactersMask = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
-            return GetRandomString(GetRandomNumber(30, 80), charactersMask);
+            return GetRandomString(RandomInteger(30, 80), charactersMask);
         }
 
         public static string GetRandomString(int length, [NotNull] string charactersMask)
@@ -43,19 +58,19 @@
             var sb = new StringBuilder(length);
 
             for (var i = 0; i < length; i++)
-                sb.Append(possibleChars[GetRandomNumber(possibleChars.Count)]);
+                sb.Append(possibleChars[RandomInteger(0, possibleChars.Count)]);
 
             return sb.ToString();
         }
 
-        public static bool RandomProbability(int percents = 50) => RandomNumberGenerator.GetInt32(100) < percents;
+        public static bool RandomProbability(int percents = 50) => RandomInteger(0, 100) < percents;
 
         public static DateTimeOffset GetRandomDate(bool historical = false)
         {
-            var randomRepetitionsCount = GetRandomNumber(3, 6);
+            var randomRepetitionsCount = RandomInteger(3, 6);
             long ticks = 1;
             for (var i = 0; i < randomRepetitionsCount; i++)
-                ticks *= GetRandomNumber(10, 1000);
+                ticks *= RandomInteger(10, 1000);
             
             var randTimeSpan = new TimeSpan(ticks);
             return historical ? DateTimeOffset.Now.Add(-randTimeSpan) : DateTimeOffset.Now.Add(randTimeSpan);
