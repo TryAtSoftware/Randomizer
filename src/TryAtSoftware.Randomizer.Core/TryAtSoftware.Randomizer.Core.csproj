@@ -8,6 +8,7 @@
         <Description>This package should be used to make your object initialization process in tests cleaner and easier than ever before.</Description>
         <PackageLicenseUrl>https://github.com/TryAtSoftware/Randomizer/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/TryAtSoftware/Randomizer</RepositoryUrl>
+        <Company>Try at software</Company>
     </PropertyGroup>
 
     <ItemGroup>

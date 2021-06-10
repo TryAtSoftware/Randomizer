@@ -8,6 +8,17 @@ namespace TryAtSoftware.Randomizer.Core.Tests.PrimitiveRandomization
     public class ArrayElementRandomizerTests
     {
         [Fact]
+        public void InitializingArrayElementRandomizerWithNullShouldResultInException()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () =>
+                {
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    _ = new ArrayElementRandomizer<int>(null);
+                });
+        }
+        
+        [Fact]
         public void RandomizationOfEmptyArrayShouldResultInDefault()
         {
             var emptyArray = Array.Empty<int>();
