@@ -19,7 +19,7 @@
         public IInstanceBuilder<TEntity> InstanceBuilder { get; }
 
         /// <inheritdoc />
-        public void AddRandomizationRule<TValue>(IRandomizationRule<TEntity, TValue> rule)
+        public void AddRandomizationRule(IRandomizationRule<TEntity> rule)
         {
             if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomValueSetters.ContainsKey(rule.PropertyName))
                 return;
@@ -29,7 +29,7 @@
         }
 
         /// <inheritdoc />
-        public void OverrideRandomizationRule<TValue>(IRandomizationRule<TEntity, TValue> rule)
+        public void OverrideRandomizationRule(IRandomizationRule<TEntity> rule)
         {
             if (string.IsNullOrWhiteSpace(rule?.PropertyName))
                 return;

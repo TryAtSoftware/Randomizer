@@ -14,6 +14,6 @@
             this._max = max;
         }
 
-        public int PrepareRandomValue() => RandomizationHelper.GetRandomNumber(this._min, this._max);
+        public int PrepareRandomValue() => RandomizationHelper.RandomInteger(this._min, this._max);
     }
 }
