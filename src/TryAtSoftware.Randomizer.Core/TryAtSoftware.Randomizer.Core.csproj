@@ -1,18 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+    
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <PackageId>TryAtSoftware.Randomizer</PackageId>
-        <Title>TryAtSoftware.Randomizer</Title>
-        <Authors>Tony Troeff</Authors>
-        <Description>This package should be used to make your object initialization process in tests cleaner and easier than ever before.</Description>
-        <PackageLicenseUrl>https://github.com/TryAtSoftware/Randomizer/blob/main/LICENSE</PackageLicenseUrl>
-        <RepositoryUrl>https://github.com/TryAtSoftware/Randomizer</RepositoryUrl>
-        <Company>Try at software</Company>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0">
+          <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>
