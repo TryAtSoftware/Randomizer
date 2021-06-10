@@ -15,10 +15,8 @@
 
         public static int RandomInteger(int inclusiveBottomBound, int exclusiveUpperBound)
         {
-            if (exclusiveUpperBound < inclusiveBottomBound)
+            if (exclusiveUpperBound <= inclusiveBottomBound)
                 throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than the minimum.");
-            if (inclusiveBottomBound == exclusiveUpperBound)
-                return inclusiveBottomBound;
 
             using var rng = new RNGCryptoServiceProvider();
             var data = new byte[4];

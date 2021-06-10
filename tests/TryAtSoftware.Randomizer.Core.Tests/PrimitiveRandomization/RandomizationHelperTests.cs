@@ -11,12 +11,24 @@ namespace TryAtSoftware.Randomizer.Core.Tests.PrimitiveRandomization
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomString(-1, "mask"));
         }
-        
+
         [Theory]
         [MemberData(nameof(TestsHelper.GetInvalidStringParameters), MemberType = typeof(TestsHelper))]
         public void GetRandomstringShouldValidateMask(string mask)
         {
             Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, mask));
+        }
+
+        [Fact]
+        public void RandomIntegerShouldNeverExceedBoundaries()
+        {
+            for (var i = 1; i <= 1000; i++)
+            {
+                var randomInteger = RandomizationHelper.RandomInteger(0, i);
+
+                Assert.True(randomInteger >= 0);
+                Assert.True(randomInteger < i);
+            }
         }
     }
 }
