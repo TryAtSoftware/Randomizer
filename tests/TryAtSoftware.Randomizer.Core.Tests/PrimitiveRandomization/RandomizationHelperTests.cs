@@ -1,6 +1,7 @@
 namespace TryAtSoftware.Randomizer.Core.Tests.PrimitiveRandomization
 {
     using System;
+    using System.Runtime.InteropServices.ComTypes;
     using TryAtSoftware.Randomizer.Core.Helpers;
     using Xunit;
 
@@ -29,6 +30,18 @@ namespace TryAtSoftware.Randomizer.Core.Tests.PrimitiveRandomization
                 Assert.True(randomInteger >= 0);
                 Assert.True(randomInteger < i);
             }
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(3, 1)]
+        public void RandomIntegerGenerationWithInvalidBoundariesShouldFail(int min, int max)
+        {
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                {
+                    _ = RandomizationHelper.RandomInteger(min, max);
+                });
         }
     }
 }
