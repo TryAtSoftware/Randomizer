@@ -7,7 +7,9 @@
     {
         [NotNull]
         IInstanceBuilder<TEntity> InstanceBuilder { get; }
-        
+
+        bool RandomizeConstructorParameter<TValue>(string parameterName, IRandomizer<TValue> randomizer);
+        bool OverrideConstructorParameterRandomization<TValue>(string parameterName, IRandomizer<TValue> randomizer);
         void AddRandomizationRule(IRandomizationRule<TEntity> rule);
         void OverrideRandomizationRule(IRandomizationRule<TEntity> rule);
     }

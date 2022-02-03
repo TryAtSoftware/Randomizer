@@ -1,10 +1,9 @@
 namespace TryAtSoftware.Randomizer.Core.Tests.InstanceBuilders
 {
-    using TryAtSoftware.Randomizer.Core.Interfaces;
     using TryAtSoftware.Randomizer.Core.Tests.Models;
 
-    public class PersonInstanceBuilder : IInstanceBuilder<Person>
+    public class PersonInstanceBuilder : SimpleInstanceBuilder<Person>
     {
-        public Person PrepareNewInstance() => new();
+        protected override Person PrepareNewInstance() => new();
     }
 }

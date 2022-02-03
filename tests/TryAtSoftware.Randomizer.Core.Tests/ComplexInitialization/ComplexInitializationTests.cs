@@ -25,5 +25,22 @@ namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization
             Assert.NotSame(firstPerson, secondPerson);
             Assert.NotEqual(firstPerson, secondPerson, new PeopleComparer());
         }
+
+        [Fact]
+        public void ComplexInstanceBuildingProcessShouldBeExecutedCorrectly()
+        {
+            var instanceBuilder = new GeneralInstanceBuilder<Car>();
+            var complexRandomizer = new ComplexRandomizer<Car>(instanceBuilder);
+            complexRandomizer.RandomizeConstructorParameter(nameof(Car.Make), new StringRandomizer());
+            complexRandomizer.RandomizeConstructorParameter(nameof(Car.Model), new StringRandomizer());
+            complexRandomizer.RandomizeConstructorParameter(nameof(Car.Year), new NumberRandomizer());
+
+            var firstCar = complexRandomizer.PrepareRandomValue();
+            Assert.NotNull(firstCar);
+
+            var secondCar = complexRandomizer.PrepareRandomValue();
+            Assert.NotNull(secondCar);
+            Assert.NotSame(firstCar, secondCar);
+        }
     }
 }
