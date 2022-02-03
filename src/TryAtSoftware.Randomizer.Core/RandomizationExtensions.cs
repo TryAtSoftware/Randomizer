@@ -10,16 +10,6 @@
     {
         public static IRandomizer<TValue> AsConstantRandomizer<TValue>(this TValue value) => new ConstantValueRandomizer<TValue>(value);
 
-        public static bool RandomizeParameter<TEntity, TValue>(
-            [NotNull] this IComplexRandomizer<TEntity> complexRandomizer,
-            [NotNull] Expression<Func<TEntity, TValue>> propertySelector,
-            [NotNull] IRandomizer<TValue> randomizer)
-            where TEntity : class
-        {
-            var rule = BuildParameterRandomizationRule(propertySelector, randomizer);
-            return complexRandomizer.AddParameterRandomizationRule(rule);
-        }
-
         public static void AddRandomizationRule<TEntity, TValue>(
             [NotNull] this IComplexRandomizer<TEntity> complexRandomizer,
             [NotNull] Expression<Func<TEntity, TValue>> propertySelector,
@@ -39,10 +29,6 @@
             var rule = BuildRandomizationRule(propertySelector, randomizer);
             complexRandomizer.OverrideRandomizationRule(rule);
         }
-
-        private static IParameterRandomizationRule BuildParameterRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
-            where TEntity : class
-            => new ParameterRandomizationRule<TEntity, TValue>(propertySelector, randomizer);
 
         private static IRandomizationRule<TEntity> BuildRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
             where TEntity : class

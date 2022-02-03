@@ -31,9 +31,9 @@ namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization
         {
             var instanceBuilder = new GeneralInstanceBuilder<Car>();
             var complexRandomizer = new ComplexRandomizer<Car>(instanceBuilder);
-            complexRandomizer.RandomizeParameter(x => x.Make, new StringRandomizer());
-            complexRandomizer.RandomizeParameter(x => x.Model, new StringRandomizer());
-            complexRandomizer.RandomizeParameter(x => x.Year, new NumberRandomizer());
+            complexRandomizer.AddRandomizationRule(x => x.Make, new StringRandomizer());
+            complexRandomizer.AddRandomizationRule(x => x.Model, new StringRandomizer());
+            complexRandomizer.AddRandomizationRule(x => x.Year, new NumberRandomizer());
 
             var firstCar = complexRandomizer.PrepareRandomValue();
             Assert.NotNull(firstCar);
