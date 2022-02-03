@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using JetBrains.Annotations;
     using TryAtSoftware.Randomizer.Core.Interfaces;
-    using TryAtSoftware.Randomizer.Core.Primitives;
 
     public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         where TEntity : class
@@ -21,22 +20,18 @@
         public IInstanceBuilder<TEntity> InstanceBuilder { get; }
 
         /// <inheritdoc />
-        public bool RandomizeConstructorParameter<TValue>(string parameterName, IRandomizer<TValue> randomizer)
+        public bool AddParameterRandomizationRule(IParameterRandomizationRule rule)
         {
-            if (string.IsNullOrWhiteSpace(parameterName) || this._constructorRandomizers.ContainsKey(parameterName) || randomizer is null) return false;
-
-            var boxedRandomizer = new RandomizerBox<TValue>(randomizer);
-            this._constructorRandomizers.Add(parameterName, boxedRandomizer);
+            if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomValueSetters.ContainsKey(rule.PropertyName)) return false;
+            this._constructorRandomizers.Add(rule.PropertyName, rule.Randomizer);
             return true;
         }
 
         /// <inheritdoc />
-        public bool OverrideConstructorParameterRandomization<TValue>(string parameterName, IRandomizer<TValue> randomizer)
+        public bool OverrideParameterRandomizationRule(IParameterRandomizationRule rule)
         {
-            if (string.IsNullOrWhiteSpace(parameterName) || !this._constructorRandomizers.ContainsKey(parameterName) || randomizer is null) return false;
-
-            var boxedRandomizer = new RandomizerBox<TValue>(randomizer);
-            this._constructorRandomizers[parameterName] = boxedRandomizer;
+            if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomValueSetters.ContainsKey(rule.PropertyName) == false) return false;
+            this._constructorRandomizers[rule.PropertyName] = rule.Randomizer;
             return true;
         }
 
