@@ -4,7 +4,11 @@ namespace TryAtSoftware.Randomizer.Core
 
     public abstract class SimpleInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
     {
-        public TEntity PrepareNewInstance(IInstanceBuildingArguments arguments) => this.PrepareNewInstance();
+        public IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments)
+        {
+            var entity = this.PrepareNewInstance();
+            return new InstanceBuildingResult<TEntity>(entity);
+        }
 
         protected abstract TEntity PrepareNewInstance();
     }

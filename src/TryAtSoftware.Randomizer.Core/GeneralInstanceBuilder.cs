@@ -7,26 +7,36 @@ namespace TryAtSoftware.Randomizer.Core
 
     public class GeneralInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
     {
-        public TEntity PrepareNewInstance(IInstanceBuildingArguments arguments)
+        public IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments)
         {
-            var parameters = GetParameters(arguments);
+            var (parameters, usedParameterNames) = GetParameters(arguments);
 
             var instance = Activator.CreateInstance(typeof(TEntity), parameters);
-            if (instance is TEntity entity) return entity;
+            if (instance is TEntity entity) return new InstanceBuildingResult<TEntity>(entity, usedParameterNames);
 
-            return default;
+            return new InstanceBuildingResult<TEntity>(default);
         }
 
-        private static object[] GetParameters(IInstanceBuildingArguments arguments)
+        private static (object[] Parameters, string[] UsedParameterNames) GetParameters(IInstanceBuildingArguments arguments)
         {
             var constructors = typeof(TEntity).GetConstructors(BindingFlags.Instance | BindingFlags.Public);
             var constructorParameters = constructors.Select(c => c.GetParameters());
             foreach (var parameters in constructorParameters.OrderByDescending(x => x.Length))
             {
-                if (parameters.All(p => arguments.ContainsParameter(p.Name))) return parameters.Select(p => arguments.GetParameterValue(p.Name)).ToArray();
+                if (parameters.All(p => arguments.ContainsParameter(p.Name)) == false) continue;
+
+                var parameterValues = new object[parameters.Length];
+                var parameterNames = new string[parameters.Length];
+                for (var i = 0; i < parameters.Length; i++)
+                {
+                    parameterValues[i] = arguments.GetParameterValue(parameters[i].Name);
+                    parameterNames[i] = parameters[i].Name;
+                }
+
+                return (Parameters: parameterValues, UsedParameterNames: parameterNames);
             }
 
-            return Array.Empty<object>();
+            return (Parameters: Array.Empty<object>(), UsedParameterNames: Array.Empty<string>());
         }
     }
 }

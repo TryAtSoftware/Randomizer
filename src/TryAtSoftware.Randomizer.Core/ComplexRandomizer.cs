@@ -37,10 +37,14 @@
         public TEntity PrepareRandomValue()
         {
             var instanceBuildingArguments = new InstanceBuildingArguments(this._constructorRandomizers);
-            var instance = this.InstanceBuilder.PrepareNewInstance(instanceBuildingArguments);
+            var instanceBuildingResult = this.InstanceBuilder.PrepareNewInstance(instanceBuildingArguments);
+            var instance = instanceBuildingResult?.Instance;
             if (instance is null) return null;
 
-            foreach (var randomValueSetter in this._randomValueSetters.Values) randomValueSetter.SetValue(instance);
+            foreach (var (name, randomValueSetter) in this._randomValueSetters)
+            {
+                if (instanceBuildingResult.IsUsed(name) == false) randomValueSetter.SetValue(instance);
+            }
 
             return instance;
         }

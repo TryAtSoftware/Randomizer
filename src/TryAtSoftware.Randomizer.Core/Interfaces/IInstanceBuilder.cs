@@ -2,6 +2,6 @@
 {
     public interface IInstanceBuilder<out TEntity>
     {
-        TEntity PrepareNewInstance(IInstanceBuildingArguments arguments);
+        IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments);
     }
 }
