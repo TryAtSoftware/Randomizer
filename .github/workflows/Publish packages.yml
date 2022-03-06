@@ -24,8 +24,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration "${{ env.CONFIGURATION }}"
 
-    - name: Pack 'Collection extensions'
-      run: dotnet pack --no-build --configuration "${{ env.CONFIGURATION }}" ./TryAtSoftware.Randomizer.Core/TryAtSoftware.Randomizer.Core.csproj -o "${{ env.PACKAGES_DIRECTORY }}"
+    - name: Pack 'Randomizer.Core'
+      run: dotnet pack --no-build --configuration "${{ env.CONFIGURATION }}" ./src/TryAtSoftware.Randomizer.Core/TryAtSoftware.Randomizer.Core.csproj -o "${{ env.PACKAGES_DIRECTORY }}"
 
     - name: Publish all packages
       run: dotnet nuget push "${{ env.PACKAGES_DIRECTORY }}/*.nupkg" --source "${{ env.NUGET_SOURCE }}" --api-key "${{ env.NUGET_KEY }}" --skip-duplicate
