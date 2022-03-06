@@ -37,5 +37,16 @@
             var otherRandomParameters = parametersRandomizer.PrepareRandomValue();
             foreach (var otherRandomParameter in otherRandomParameters) Assert.False(instanceBuildingResult.IsUsed(otherRandomParameter));
         }
+
+        [Theory]
+        [MemberData(nameof(TestsHelper.GetInvalidStringParameters), MemberType = typeof(TestsHelper))]
+        public static void IsUsedWithEmptyParameterNameShouldAlwaysReturnFalse(string parameterName)
+        {
+            var randomText = RandomizationHelper.GetRandomString();
+            var instanceBuildingResult = new InstanceBuildingResult<string>(randomText);
+
+            Assert.Equal(randomText, instanceBuildingResult.Instance);
+            Assert.False(instanceBuildingResult.IsUsed(parameterName));
+        }
     }
 }
