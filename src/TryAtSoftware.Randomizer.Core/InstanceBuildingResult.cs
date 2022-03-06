@@ -1,11 +1,12 @@
 ﻿namespace TryAtSoftware.Randomizer.Core
 {
+    using System;
     using System.Collections.Generic;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 
     public class InstanceBuildingResult<TEntity> : IInstanceBuildingResult<TEntity>
     {
-        private readonly HashSet<string> _usedParameters = new HashSet<string>();
+        private readonly HashSet<string> _usedParameters = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
         public InstanceBuildingResult(TEntity instance, IEnumerable<string> usedParameters = null)
         {
