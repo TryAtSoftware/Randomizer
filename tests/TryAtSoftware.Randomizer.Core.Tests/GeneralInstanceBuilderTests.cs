@@ -61,38 +61,38 @@
             randomizers[nameof(SimpleEntity.Number)] = new RandomizerBox<int>(new NumberRandomizer());
             return new InstanceBuildingArguments(randomizers);
         }
-    }
 
-    public class SimpleEntity
-    {
-        public string Text { get; set; }
-        public int Number { get; set; }
-    }
-
-    public class MoreComplexEntity : SimpleEntity
-    {
-        public MoreComplexEntity(string text)
+        private class SimpleEntity
         {
-            this.Text = text;
-        }
-    }
-
-    public class MostComplexEntity : MoreComplexEntity
-    {
-        public MostComplexEntity(string text) : base(text)
-        {
+            public string Text { get; set; }
+            public int Number { get; set; }
         }
 
-        public MostComplexEntity(string text, int number) : this(text)
+        private class MoreComplexEntity : SimpleEntity
         {
-            this.Number = number;
+            public MoreComplexEntity(string text)
+            {
+                this.Text = text;
+            }
         }
-    }
 
-    public class TooComplexEntity : MostComplexEntity
-    {
-        public TooComplexEntity(string text, int number, object other) : base(text, number)
+        private class MostComplexEntity : MoreComplexEntity
         {
+            public MostComplexEntity(string text) : base(text)
+            {
+            }
+
+            public MostComplexEntity(string text, int number) : this(text)
+            {
+                this.Number = number;
+            }
+        }
+
+        private class TooComplexEntity : MostComplexEntity
+        {
+            public TooComplexEntity(string text, int number, object other) : base(text, number)
+            {
+            }
         }
     }
 }

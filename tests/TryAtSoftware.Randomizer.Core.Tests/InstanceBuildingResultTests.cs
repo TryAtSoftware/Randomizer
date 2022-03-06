@@ -5,7 +5,7 @@
     using TryAtSoftware.Randomizer.Core.Primitives;
     using Xunit;
 
-    public class InstanceBuildingResultTests
+    public static class InstanceBuildingResultTests
     {
         [Fact]
         public static void InstanceBuildingResultShouldBeCorrectlyInstantiated()
