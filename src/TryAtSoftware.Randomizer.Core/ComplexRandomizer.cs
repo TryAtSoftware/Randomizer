@@ -8,6 +8,7 @@
     public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         where TEntity : class
     {
+        private readonly HashSet<string> _randomizedMembers = new HashSet<string>();
         private readonly Dictionary<string, IRandomizer<object>> _constructorRandomizers = new Dictionary<string, IRandomizer<object>>();
         private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new Dictionary<string, IRandomValueSetter<TEntity>>();
 
@@ -22,7 +23,7 @@
         /// <inheritdoc />
         public void AddRandomizationRule(IRandomizationRule<TEntity> rule)
         {
-            if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomValueSetters.ContainsKey(rule.PropertyName)) return;
+            if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomizedMembers.Contains(rule.PropertyName)) return;
             this.SetRuleInternally(rule);
         }
 
@@ -51,13 +52,17 @@
 
         private void SetRuleInternally(IRandomizationRule<TEntity> rule)
         {
-            if (rule is null) return;
+            if (rule is null || string.IsNullOrWhiteSpace(rule.PropertyName)) return;
 
             var setter = rule.GetValueSetter();
-            if (setter != null) this._randomValueSetters[rule.PropertyName] = setter;
+            if (setter is null) this._randomValueSetters.Remove(rule.PropertyName);
+            else this._randomValueSetters[rule.PropertyName] = setter;
 
             var parameterRandomizer = rule.GetParameterRandomizer();
-            if (parameterRandomizer != null) this._constructorRandomizers[rule.PropertyName] = parameterRandomizer;
+            if (parameterRandomizer is null) this._constructorRandomizers.Remove(rule.PropertyName);
+            else this._constructorRandomizers[rule.PropertyName] = parameterRandomizer;
+
+            this._randomizedMembers.Add(rule.PropertyName);
         }
     }
 }
