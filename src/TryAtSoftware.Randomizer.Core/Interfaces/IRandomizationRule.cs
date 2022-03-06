@@ -6,5 +6,6 @@
         string PropertyName { get; }
 
         IRandomValueSetter<TEntity> GetValueSetter();
+        IRandomizer<object> GetParameterRandomizer();
     }
 }

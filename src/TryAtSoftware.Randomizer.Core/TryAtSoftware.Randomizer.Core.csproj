@@ -3,19 +3,21 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <PackageId>TryAtSoftware.Randomizer</PackageId>
-        <Version>1.0.2</Version>
+        <Version>1.0.3</Version>
         <Authors>Tony Troeff</Authors>
         <RepositoryUrl>https://github.com/TryAtSoftware/Randomizer</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Description>This package should be used to make your object initialization process in tests cleaner and easier than ever before.</Description>
-        <Copyright>Copyright (c) .NET Foundation and contributors 2008-2021</Copyright>
+        <Copyright>Copyright (c) .NET Foundation and contributors 2008-2022</Copyright>
         <PackageTags>tryatsoftware randomization random</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0">
-          <PrivateAssets>all</PrivateAssets>
+      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="all" />
+      <PackageReference Include="SonarAnalyzer.CSharp" Version="8.36.1.44192">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
 
