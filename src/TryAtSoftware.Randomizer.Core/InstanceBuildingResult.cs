@@ -14,7 +14,7 @@
         }
 
         public TEntity Instance { get; }
-        public bool IsUsed(string parameterName) => string.IsNullOrWhiteSpace(parameterName) == false && this._usedParameters.Contains(parameterName);
+        public bool IsUsed(string parameterName) => !string.IsNullOrWhiteSpace(parameterName) && this._usedParameters.Contains(parameterName);
 
         private void RegisterUsedParameters(IEnumerable<string> usedParameters)
         {
@@ -22,7 +22,7 @@
 
             foreach (var parameter in usedParameters)
             {
-                if (string.IsNullOrWhiteSpace(parameter) == false) this._usedParameters.Add(parameter);
+                if (!string.IsNullOrWhiteSpace(parameter)) this._usedParameters.Add(parameter);
             }
         }
     }

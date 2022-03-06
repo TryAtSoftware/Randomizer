@@ -44,7 +44,7 @@
 
             foreach (var (name, randomValueSetter) in this._randomValueSetters)
             {
-                if (instanceBuildingResult.IsUsed(name) == false) randomValueSetter.SetValue(instance);
+                if (!instanceBuildingResult.IsUsed(name)) randomValueSetter.SetValue(instance);
             }
 
             return instance;

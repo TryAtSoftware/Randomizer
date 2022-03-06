@@ -23,7 +23,7 @@ namespace TryAtSoftware.Randomizer.Core
             var constructorParameters = constructors.Select(c => c.GetParameters());
             foreach (var parameters in constructorParameters.OrderByDescending(x => x.Length))
             {
-                if (parameters.All(p => arguments.ContainsParameter(p.Name)) == false) continue;
+                if (!parameters.All(p => arguments.ContainsParameter(p.Name))) continue;
 
                 var parameterValues = new object[parameters.Length];
                 var parameterNames = new string[parameters.Length];
