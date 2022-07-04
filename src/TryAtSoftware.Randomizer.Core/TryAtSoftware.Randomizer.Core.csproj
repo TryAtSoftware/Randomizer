@@ -19,7 +19,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="TryAtSoftware.Extensions.Reflection" Version="1.0.0-alpha.7" />
+      <PackageReference Include="TryAtSoftware.Extensions.Reflection" Version="1.0.0-alpha.8" />
     </ItemGroup>
 
 </Project>
