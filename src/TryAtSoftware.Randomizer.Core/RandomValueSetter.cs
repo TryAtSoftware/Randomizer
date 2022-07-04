@@ -3,6 +3,7 @@
     using System;
     using System.Reflection;
     using JetBrains.Annotations;
+    using TryAtSoftware.Extensions.Reflection.Interfaces;
     using TryAtSoftware.Randomizer.Core.Interfaces;
 
     public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
@@ -28,8 +29,8 @@
 
             try
             {
-                if (memberInfo is PropertyInfo propertyInfo)
-                    propertyInfo.SetValue(instance, value);
+                if (memberInfo is PropertyInfo propertyInfo) propertyInfo.SetValue(instance, value);
+                else if (memberInfo is FieldInfo fieldInfo) fieldInfo.SetValue(instance, value);
             }
             catch
             {
