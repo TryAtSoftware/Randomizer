@@ -1,10 +1,16 @@
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=TryAtSoftware_Randomizer)](https://sonarcloud.io/dashboard?id=TryAtSoftware_Randomizer)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Randomizer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Randomizer)
+
 [![Core validation](https://github.com/TryAtSoftware/Randomizer/actions/workflows/Core%20validation.yml/badge.svg)](https://github.com/TryAtSoftware/Randomizer/actions/workflows/Core%20validation.yml)
 
 # About the project
 
-`TryAtSoftware.Randomizer` is a library that should simplify the process of random values generation. no matter of the complexity.
-We offer a set of methods and components that can be used to generate random values of different types. They are reusable and can be applied to every projects of yours if you wish.
+`TryAtSoftware.Randomizer` is a library that should simplify the process of random values generation.
+We offer a set of methods and components that can be used to generate random values of different types. They are reusable and can be applied to every projects of yours.
 
 # About us
 
