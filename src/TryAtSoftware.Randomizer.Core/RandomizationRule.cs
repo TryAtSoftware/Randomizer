@@ -26,7 +26,7 @@ public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
     {
         if (randomizer is null) throw new ArgumentNullException(nameof(randomizer));
 
-        this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, randomizer, MembersBinderCache<TEntity>.Instance.Binder);
+        this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, randomizer, ModelInfo<TEntity>.Instance);
         this._parameterRandomizer = randomizer;
     }
 
