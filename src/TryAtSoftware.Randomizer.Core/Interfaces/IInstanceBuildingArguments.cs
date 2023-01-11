@@ -1,8 +1,7 @@
-namespace TryAtSoftware.Randomizer.Core.Interfaces
+namespace TryAtSoftware.Randomizer.Core.Interfaces;
+
+public interface IInstanceBuildingArguments
 {
-    public interface IInstanceBuildingArguments
-    {
-        bool ContainsParameter(string parameterName);
-        object GetParameterValue(string parameterName);
-    }
+    bool ContainsParameter(string parameterName);
+    object GetParameterValue(string parameterName);
 }

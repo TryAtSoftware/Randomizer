@@ -1,27 +1,21 @@
-﻿namespace TryAtSoftware.Randomizer.Core
+﻿namespace TryAtSoftware.Randomizer.Core;
+
+using System.Reflection;
+using TryAtSoftware.Extensions.Reflection;
+using TryAtSoftware.Extensions.Reflection.Interfaces;
+
+// NOTE: Tony Troeff, 18/04/2021 - This is the idea of this class - to provide a single `IMembersBinder` instance for any requested type represented by the generic parameter.
+public class MembersBinderCache<TEntity>
+    where TEntity : class
 {
-    using System.Reflection;
-    using TryAtSoftware.Extensions.Reflection;
-    using TryAtSoftware.Extensions.Reflection.Interfaces;
-
-    public static class MembersBinderCache<TEntity>
-        where TEntity : class
+    public static MembersBinderCache<TEntity> Instance { get; } = Initialize();
+    
+    public MembersBinderCache()
     {
-        static MembersBinderCache()
-        {
-            Binder = new MembersBinder<TEntity>(IsValidMember, BindingFlags.Public | BindingFlags.Instance);
-        }
-
-        // NOTE: Tony Troeff, 18/04/2021 - This is the idea of this class - to provide a single `IMembersBinder` instance for any requested type represented by the generic parameter.
-        // ReSharper disable once StaticMemberInGenericType
-        public static IMembersBinder Binder { get; }
-
-        private static bool IsValidMember(MemberInfo memberInfo)
-            => memberInfo switch
-            {
-                PropertyInfo pi => pi.CanWrite,
-                FieldInfo _ => true,
-                _ => false
-            };
+        this.Binder = new MembersBinder<TEntity>(x => x is PropertyInfo { CanWrite: true }, BindingFlags.Public | BindingFlags.Instance);
     }
+
+    public IMembersBinder Binder { get; }
+
+    private static MembersBinderCache<TEntity> Initialize() => new ();
 }
