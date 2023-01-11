@@ -13,7 +13,7 @@
         private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new Dictionary<string, IRandomValueSetter<TEntity>>();
 
         public ComplexRandomizer()
-            : base (new GeneralInstanceBuilder<TEntity>())
+            : this(new GeneralInstanceBuilder<TEntity>())
         {
         }
 
