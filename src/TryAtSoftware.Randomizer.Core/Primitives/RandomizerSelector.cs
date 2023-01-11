@@ -15,8 +15,7 @@ public class RandomizerSelector<T> : IRandomizer<T>
     public T PrepareRandomValue()
     {
         var randomRandomizer = this._randomizerSelector.PrepareRandomValue();
-        if (randomRandomizer is null)
-            return default;
+        if (randomRandomizer is null) return default;
 
         return randomRandomizer.PrepareRandomValue();
     }
