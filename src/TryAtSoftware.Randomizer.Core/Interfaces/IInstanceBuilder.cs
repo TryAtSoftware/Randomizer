@@ -1,7 +1,6 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Interfaces
+﻿namespace TryAtSoftware.Randomizer.Core.Interfaces;
+
+public interface IInstanceBuilder<out TEntity>
 {
-    public interface IInstanceBuilder<out TEntity>
-    {
-        IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments);
-    }
+    IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments);
 }

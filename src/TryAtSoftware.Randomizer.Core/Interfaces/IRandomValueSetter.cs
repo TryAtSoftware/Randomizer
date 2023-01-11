@@ -1,8 +1,7 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Interfaces
+﻿namespace TryAtSoftware.Randomizer.Core.Interfaces;
+
+public interface IRandomValueSetter<in TEntity>
+    where TEntity : class
 {
-    public interface IRandomValueSetter<in TEntity>
-        where TEntity : class
-    {
-        void SetValue(TEntity instance);
-    }
+    void SetValue(TEntity instance);
 }

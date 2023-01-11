@@ -1,41 +1,37 @@
-﻿namespace TryAtSoftware.Randomizer.Core
+﻿namespace TryAtSoftware.Randomizer.Core;
+
+using JetBrains.Annotations;
+using System;
+using TryAtSoftware.Randomizer.Core.Interfaces;
+
+public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
+    where TEntity : class
 {
-    using System;
-    using System.Reflection;
-    using JetBrains.Annotations;
-    using TryAtSoftware.Extensions.Reflection.Interfaces;
-    using TryAtSoftware.Randomizer.Core.Interfaces;
+    private readonly string _propertyName;
+    private readonly IRandomizer<TValue> _randomizer;
+    private readonly IModelInfo<TEntity> _modelInfo;
 
-    public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
-        where TEntity : class
+    public RandomValueSetter([NotNull] string propertyName, [NotNull] IRandomizer<TValue> randomizer, [NotNull] IModelInfo<TEntity> modelInfo)
     {
-        private readonly string _propertyName;
-        private readonly IRandomizer<TValue> _randomizer;
-        private readonly IMembersBinder _binder;
+        this._propertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
+        this._randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+        this._modelInfo = modelInfo ?? throw new ArgumentNullException(nameof(modelInfo));
+    }
 
-        public RandomValueSetter([NotNull] string propertyName, [NotNull] IRandomizer<TValue> randomizer, [NotNull] IMembersBinder membersBinder)
+    public void SetValue(TEntity instance)
+    {
+        if (instance is null || !this._modelInfo.Setters.TryGetValue(this._propertyName, out var setter))
+            return;
+
+        var value = this._randomizer.PrepareRandomValue();
+
+        try
         {
-            this._propertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
-            this._randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
-            this._binder = membersBinder ?? throw new ArgumentNullException(nameof(membersBinder));
+            setter(instance, value);
         }
-
-        public void SetValue(TEntity instance)
+        catch
         {
-            if (instance is null || !this._binder.MemberInfos.TryGetValue(this._propertyName, out var memberInfo))
-                return;
-
-            var value = this._randomizer.PrepareRandomValue();
-
-            try
-            {
-                if (memberInfo is PropertyInfo propertyInfo) propertyInfo.SetValue(instance, value);
-                else if (memberInfo is FieldInfo fieldInfo) fieldInfo.SetValue(instance, value);
-            }
-            catch
-            {
-                // If any exception occurs, we want to swallow it.
-            }
+            // If any exception occurs, we want to swallow it.
         }
     }
 }

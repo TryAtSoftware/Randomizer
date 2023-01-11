@@ -1,10 +1,9 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Primitives
-{
-    using System;
-    using TryAtSoftware.Randomizer.Core.Interfaces;
+﻿namespace TryAtSoftware.Randomizer.Core.Primitives;
 
-    public class GuidRandomizer : IRandomizer<Guid>
-    {
-        public Guid PrepareRandomValue() => Guid.NewGuid();
-    }
+using System;
+using TryAtSoftware.Randomizer.Core.Interfaces;
+
+public class GuidRandomizer : IRandomizer<Guid>
+{
+    public Guid PrepareRandomValue() => Guid.NewGuid();
 }

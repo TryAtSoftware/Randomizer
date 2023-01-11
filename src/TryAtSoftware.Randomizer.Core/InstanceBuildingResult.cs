@@ -1,30 +1,29 @@
-﻿namespace TryAtSoftware.Randomizer.Core
+﻿namespace TryAtSoftware.Randomizer.Core;
+
+using System;
+using System.Collections.Generic;
+using TryAtSoftware.Randomizer.Core.Interfaces;
+
+public class InstanceBuildingResult<TEntity> : IInstanceBuildingResult<TEntity>
 {
-    using System;
-    using System.Collections.Generic;
-    using TryAtSoftware.Randomizer.Core.Interfaces;
+    private readonly HashSet<string> _usedParameters = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
-    public class InstanceBuildingResult<TEntity> : IInstanceBuildingResult<TEntity>
+    public InstanceBuildingResult(TEntity instance, IEnumerable<string> usedParameters = null)
     {
-        private readonly HashSet<string> _usedParameters = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        this.Instance = instance;
+        this.RegisterUsedParameters(usedParameters);
+    }
 
-        public InstanceBuildingResult(TEntity instance, IEnumerable<string> usedParameters = null)
+    public TEntity Instance { get; }
+    public bool IsUsed(string parameterName) => !string.IsNullOrWhiteSpace(parameterName) && this._usedParameters.Contains(parameterName);
+
+    private void RegisterUsedParameters(IEnumerable<string> usedParameters)
+    {
+        if (usedParameters is null) return;
+
+        foreach (var parameter in usedParameters)
         {
-            this.Instance = instance;
-            this.RegisterUsedParameters(usedParameters);
-        }
-
-        public TEntity Instance { get; }
-        public bool IsUsed(string parameterName) => !string.IsNullOrWhiteSpace(parameterName) && this._usedParameters.Contains(parameterName);
-
-        private void RegisterUsedParameters(IEnumerable<string> usedParameters)
-        {
-            if (usedParameters is null) return;
-
-            foreach (var parameter in usedParameters)
-            {
-                if (!string.IsNullOrWhiteSpace(parameter)) this._usedParameters.Add(parameter);
-            }
+            if (!string.IsNullOrWhiteSpace(parameter)) this._usedParameters.Add(parameter);
         }
     }
 }

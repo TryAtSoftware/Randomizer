@@ -1,7 +1,6 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Interfaces
+﻿namespace TryAtSoftware.Randomizer.Core.Interfaces;
+
+public interface IRandomizer<out TValue>
 {
-    public interface IRandomizer<out TValue>
-    {
-        TValue PrepareRandomValue();
-    }
+    TValue PrepareRandomValue();
 }
