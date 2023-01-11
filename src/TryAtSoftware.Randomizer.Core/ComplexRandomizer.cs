@@ -12,6 +12,11 @@
         private readonly Dictionary<string, IRandomizer<object>> _constructorRandomizers = new Dictionary<string, IRandomizer<object>>();
         private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new Dictionary<string, IRandomValueSetter<TEntity>>();
 
+        public ComplexRandomizer()
+            : base (new GeneralInstanceBuilder<TEntity>())
+        {
+        }
+
         public ComplexRandomizer([NotNull] IInstanceBuilder<TEntity> instanceBuilder)
         {
             this.InstanceBuilder = instanceBuilder ?? throw new ArgumentNullException(nameof(instanceBuilder));
