@@ -1,16 +1,15 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Primitives
+﻿namespace TryAtSoftware.Randomizer.Core.Primitives;
+
+using TryAtSoftware.Randomizer.Core.Interfaces;
+
+public class ConstantValueRandomizer<TValue> : IRandomizer<TValue>
 {
-    using TryAtSoftware.Randomizer.Core.Interfaces;
+    private readonly TValue _value;
 
-    public class ConstantValueRandomizer<TValue> : IRandomizer<TValue>
+    public ConstantValueRandomizer(TValue value)
     {
-        private readonly TValue _value;
-
-        public ConstantValueRandomizer(TValue value)
-        {
-            this._value = value;
-        }
-
-        public TValue PrepareRandomValue() => this._value;
+        this._value = value;
     }
+
+    public TValue PrepareRandomValue() => this._value;
 }

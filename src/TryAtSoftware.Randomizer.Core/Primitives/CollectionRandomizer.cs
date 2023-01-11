@@ -1,38 +1,37 @@
-﻿namespace TryAtSoftware.Randomizer.Core.Primitives
+﻿namespace TryAtSoftware.Randomizer.Core.Primitives;
+
+using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+using TryAtSoftware.Randomizer.Core.Helpers;
+using TryAtSoftware.Randomizer.Core.Interfaces;
+
+public class CollectionRandomizer<T> : IRandomizer<IEnumerable<T>>
 {
-    using System;
-    using System.Collections.Generic;
-    using JetBrains.Annotations;
-    using TryAtSoftware.Randomizer.Core.Helpers;
-    using TryAtSoftware.Randomizer.Core.Interfaces;
+    [NotNull]
+    private readonly IRandomizer<T> _singleValueRandomizer;
 
-    public class CollectionRandomizer<T> : IRandomizer<IEnumerable<T>>
+    private readonly int _minLength;
+    private readonly int _maxLength;
+
+    public CollectionRandomizer([NotNull] IRandomizer<T> singleValueRandomizer, int minLength = 1, int maxLength = 10)
     {
-        [NotNull]
-        private readonly IRandomizer<T> _singleValueRandomizer;
+        this._singleValueRandomizer = singleValueRandomizer ?? throw new ArgumentNullException(nameof(singleValueRandomizer));
+        this._minLength = minLength;
+        this._maxLength = maxLength;
+    }
 
-        private readonly int _minLength;
-        private readonly int _maxLength;
+    public IEnumerable<T> PrepareRandomValue()
+    {
+        var randomNumber = RandomizationHelper.RandomInteger(this._minLength, this._maxLength);
+        var collection = new List<T>(capacity: randomNumber);
 
-        public CollectionRandomizer([NotNull] IRandomizer<T> singleValueRandomizer, int minLength = 1, int maxLength = 10)
+        for (var i = 0; i < randomNumber; i++)
         {
-            this._singleValueRandomizer = singleValueRandomizer ?? throw new ArgumentNullException(nameof(singleValueRandomizer));
-            this._minLength = minLength;
-            this._maxLength = maxLength;
+            var currentRandomValue = this._singleValueRandomizer.PrepareRandomValue();
+            collection.Add(currentRandomValue);
         }
 
-        public IEnumerable<T> PrepareRandomValue()
-        {
-            var randomNumber = RandomizationHelper.RandomInteger(this._minLength, this._maxLength);
-            var collection = new List<T>(capacity: randomNumber);
-
-            for (var i = 0; i < randomNumber; i++)
-            {
-                var currentRandomValue = this._singleValueRandomizer.PrepareRandomValue();
-                collection.Add(currentRandomValue);
-            }
-
-            return collection;
-        }
+        return collection;
     }
 }
