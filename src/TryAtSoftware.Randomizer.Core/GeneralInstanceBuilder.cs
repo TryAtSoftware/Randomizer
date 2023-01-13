@@ -1,41 +1,56 @@
 namespace TryAtSoftware.Randomizer.Core;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 
 public class GeneralInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
 {
+    private readonly IModelInfo<TEntity> _modelInfo;
+
+    public GeneralInstanceBuilder(IModelInfo<TEntity> modelInfo = null)
+    {
+        this._modelInfo = modelInfo ?? ModelInfo<TEntity>.Instance;
+    }
+
     public IInstanceBuildingResult<TEntity> PrepareNewInstance(IInstanceBuildingArguments arguments)
     {
-        var (parameters, usedParameterNames) = GetParameters(arguments);
+        var constructorsData = this._modelInfo.Constructors;
 
-        var instance = Activator.CreateInstance(typeof(TEntity), parameters);
-        if (instance is TEntity entity) return new InstanceBuildingResult<TEntity>(entity, usedParameterNames);
+        foreach (var (parameters, objectInitializer) in constructorsData.OrderByDescending(x => x.Parameters.Length))
+        {
+            if (!CanConstructInstance(arguments, parameters)) continue;
+
+            var newInstanceData = ConstructNewInstance(arguments, parameters, objectInitializer);
+            return new InstanceBuildingResult<TEntity>(newInstanceData.Instance, newInstanceData.UsedParameterNames);
+        }
 
         return new InstanceBuildingResult<TEntity>(default);
     }
 
-    private static (object[] Parameters, string[] UsedParameterNames) GetParameters(IInstanceBuildingArguments arguments)
-    {
-        var constructors = typeof(TEntity).GetConstructors(BindingFlags.Instance | BindingFlags.Public);
-        var constructorParameters = constructors.Select(c => c.GetParameters());
-        foreach (var parameters in constructorParameters.OrderByDescending(x => x.Length))
-        {
-            if (!parameters.All(p => arguments.ContainsParameter(p.Name))) continue;
+    private static bool CanConstructInstance(IInstanceBuildingArguments arguments, ParameterInfo[] constructorParameters)
+        => constructorParameters.All(x => x.HasDefaultValue || arguments.ContainsParameter(x.Name));
 
-            var parameterValues = new object[parameters.Length];
-            var parameterNames = new string[parameters.Length];
-            for (var i = 0; i < parameters.Length; i++)
+    private static (TEntity Instance, HashSet<string> UsedParameterNames) ConstructNewInstance(IInstanceBuildingArguments arguments, ParameterInfo[] parameters, Func<object[], TEntity> objectInitializer)
+    {
+        var values = new object[parameters.Length];
+        var parameterNames = new HashSet<string>();
+
+        for (int i = 0; i < parameters.Length; i++)
+        {
+            object currentValue = null;
+            if (arguments.ContainsParameter(parameters[i].Name))
             {
-                parameterValues[i] = arguments.GetParameterValue(parameters[i].Name);
-                parameterNames[i] = parameters[i].Name;
+                currentValue = arguments.GetParameterValue(parameters[i].Name);
+                parameterNames.Add(parameters[i].Name);
             }
 
-            return (Parameters: parameterValues, UsedParameterNames: parameterNames);
+            values[i] = currentValue;
         }
 
-        return (Parameters: Array.Empty<object>(), UsedParameterNames: Array.Empty<string>());
+        var instance = objectInitializer(values);
+        return (instance, parameterNames);
     }
 }
