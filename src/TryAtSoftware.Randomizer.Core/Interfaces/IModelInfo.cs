@@ -7,5 +7,5 @@ using System.Reflection;
 public interface IModelInfo<TEntity>
 {
     Action<TEntity, object> GetSetter(string propertyName);
-    IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object?[], TEntity> ObjectInitializer)> Constructors { get; }
+    IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object[], TEntity> ObjectInitializer)> Constructors { get; }
 }
