@@ -20,18 +20,12 @@ public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
 
     public void SetValue(TEntity instance)
     {
-        if (instance is null || !this._modelInfo.Setters.TryGetValue(this._propertyName, out var setter))
-            return;
+        if (instance is null) return;
+
+        var setter = this._modelInfo.GetSetter(this._propertyName);
+        if (setter is null) return;
 
         var value = this._randomizer.PrepareRandomValue();
-
-        try
-        {
-            setter(instance, value);
-        }
-        catch
-        {
-            // If any exception occurs, we want to swallow it.
-        }
+        setter(instance, value);
     }
 }

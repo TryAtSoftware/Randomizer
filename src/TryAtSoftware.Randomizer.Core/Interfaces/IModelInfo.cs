@@ -2,11 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using TryAtSoftware.Extensions.Reflection.Interfaces;
+using System.Reflection;
 
 public interface IModelInfo<TEntity>
 {
-    IMembersBinder MembersBinder { get; }
-    
-    Dictionary<string, Action<TEntity, object>> Setters { get; }
+    Action<TEntity, object> GetSetter(string propertyName);
+    IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object?[], TEntity> ObjectInitializer)> Constructors { get; }
 }
