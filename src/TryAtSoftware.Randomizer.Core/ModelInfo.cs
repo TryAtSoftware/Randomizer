@@ -21,11 +21,12 @@ public class ModelInfo<TEntity> : IModelInfo<TEntity>
 
     public static ModelInfo<TEntity> Instance { get; } = Initialize();
 
-    public IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object[], TEntity> ObjectInitializer)> Constructors { get; }
+    public IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object[], TEntity> ObjectInitializer)> Constructors => this._constructors.AsReadOnly();
 
     public Action<TEntity, object> GetSetter(string propertyName)
     {
-        throw new NotImplementedException();
+        if (this._setters.TryGetValue(propertyName, out var setter)) return setter;
+        return null;
     }
 
     private static ModelInfo<TEntity> Initialize() => new();

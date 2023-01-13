@@ -6,7 +6,7 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 
 public class InstanceBuildingResult<TEntity> : IInstanceBuildingResult<TEntity>
 {
-    private readonly HashSet<string> _usedParameters = new (StringComparer.InvariantCultureIgnoreCase);
+    private readonly HashSet<string> _usedParameters = new (StringComparer.OrdinalIgnoreCase);
 
     public InstanceBuildingResult(TEntity instance, IEnumerable<string> usedParameters = null)
     {
