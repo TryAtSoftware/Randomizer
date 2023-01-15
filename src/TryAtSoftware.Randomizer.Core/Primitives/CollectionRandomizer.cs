@@ -23,15 +23,21 @@ public class CollectionRandomizer<T> : IRandomizer<IEnumerable<T>>
 
     public IEnumerable<T> PrepareRandomValue()
     {
-        var randomNumber = RandomizationHelper.RandomInteger(this._minLength, this._maxLength);
-        var collection = new List<T>(capacity: randomNumber);
+        var length = this.GetRandomLength();
+        var collection = new List<T>(capacity: length);
 
-        for (var i = 0; i < randomNumber; i++)
+        for (var i = 0; i < length; i++)
         {
             var currentRandomValue = this._singleValueRandomizer.PrepareRandomValue();
             collection.Add(currentRandomValue);
         }
 
         return collection;
+    }
+
+    private int GetRandomLength()
+    {
+        if (this._maxLength == this._minLength) return this._maxLength;
+        return RandomizationHelper.RandomInteger(this._minLength, this._maxLength);
     }
 }
