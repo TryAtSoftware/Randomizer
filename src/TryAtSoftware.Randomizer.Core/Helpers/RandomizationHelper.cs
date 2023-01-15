@@ -16,7 +16,7 @@ public static class RandomizationHelper
     public static int RandomInteger(int inclusiveBottomBound, int exclusiveUpperBound)
     {
         if (exclusiveUpperBound <= inclusiveBottomBound)
-            throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than the minimum.");
+            throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than or equal to the minimum.");
 
         using var rng = new RNGCryptoServiceProvider();
         var data = new byte[4];
