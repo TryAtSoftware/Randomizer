@@ -62,7 +62,7 @@ public static class RandomizationHelper
 
     public static bool RandomProbability(int percents = 50) => RandomInteger(0, 100) < percents;
 
-    public static DateTimeOffset GetRandomDate(bool historical = false)
+    public static DateTimeOffset GetRandomDateTimeOffset(bool historical = false)
     {
         var randomRepetitionsCount = RandomInteger(3, 6);
         long ticks = 1;

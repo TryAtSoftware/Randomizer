@@ -6,5 +6,5 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 
 public class DateTimeOffsetRandomizer : IRandomizer<DateTimeOffset>
 {
-    public DateTimeOffset PrepareRandomValue() => RandomizationHelper.GetRandomDate(historical: true);
+    public DateTimeOffset PrepareRandomValue() => RandomizationHelper.GetRandomDateTimeOffset(historical: true);
 }
