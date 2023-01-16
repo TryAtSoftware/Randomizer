@@ -1,10 +1,9 @@
-namespace TryAtSoftware.Randomizer.Core.Tests.Models
+namespace TryAtSoftware.Randomizer.Core.Tests.Models;
+
+public enum Priority
 {
-    public enum Priority
-    {
-        Primary,
-        Secondary,
-        Tertiary,
-        Quaternary
-    }
+    Primary,
+    Secondary,
+    Tertiary,
+    Quaternary
 }

@@ -58,7 +58,7 @@ public static class GeneralInstanceBuilderTests
 
     private static IInstanceBuildingArguments PrepareInstanceBuildingArguments()
     {
-        var randomizers = new Dictionary<string, IRandomizer<object>>(capacity: 2);
+        var randomizers = new Dictionary<string, IRandomizer<object?>>(capacity: 2);
         randomizers[nameof(SimpleEntity.Text)] = new RandomizerBox<string>(new StringRandomizer());
         randomizers[nameof(SimpleEntity.Number)] = new RandomizerBox<int>(new NumberRandomizer());
         return new InstanceBuildingArguments(randomizers);

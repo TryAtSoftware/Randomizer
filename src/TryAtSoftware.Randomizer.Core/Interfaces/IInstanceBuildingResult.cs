@@ -2,6 +2,6 @@
 
 public interface IInstanceBuildingResult<out TEntity>
 {
-    TEntity Instance { get; }
+    TEntity? Instance { get; }
     bool IsUsed(string parameterName);
 }

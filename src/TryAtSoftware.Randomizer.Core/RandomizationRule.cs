@@ -2,44 +2,29 @@
 
 using System;
 using System.Linq.Expressions;
-using JetBrains.Annotations;
 using TryAtSoftware.Randomizer.Core.Helpers;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Primitives;
 
 public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
-    where TEntity : class
 {
     private readonly IRandomValueSetter<TEntity> _valueSetter;
-    private readonly IRandomizer<TValue> _parameterRandomizer;
+    private readonly IRandomizer<TValue>? _parameterRandomizer;
 
-    private RandomizationRule(Expression<Func<TEntity, TValue>> propertySelector)
-    {
-        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
-
-        var property = propertySelector.GetPropertyInfo();
-        this.PropertyName = property.Name;
-    }
-
-    public RandomizationRule([NotNull] Expression<Func<TEntity, TValue>> propertySelector, [NotNull] IRandomizer<TValue> randomizer)
-        : this(propertySelector)
+    public RandomizationRule(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
     {
         if (randomizer is null) throw new ArgumentNullException(nameof(randomizer));
 
+        this.PropertyName = ExtractPropertyName(propertySelector);
         this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, randomizer, ModelInfo<TEntity>.Instance);
         this._parameterRandomizer = randomizer;
     }
 
-    public RandomizationRule([NotNull] Expression<Func<TEntity, TValue>> propertySelector, [NotNull] IRandomValueSetter<TEntity> valueSetter)
-        : this(propertySelector)
+    public RandomizationRule(Expression<Func<TEntity, TValue>> propertySelector, IRandomValueSetter<TEntity> valueSetter, IRandomizer<TValue>? parameterRandomizer = null)
     {
+        this.PropertyName = ExtractPropertyName(propertySelector);
         this._valueSetter = valueSetter ?? throw new ArgumentNullException(nameof(valueSetter));
-    }
-
-    public RandomizationRule([NotNull] Expression<Func<TEntity, TValue>> propertySelector, [NotNull] IRandomValueSetter<TEntity> valueSetter, [NotNull] IRandomizer<TValue> parameterRandomizer)
-        : this(propertySelector, valueSetter)
-    {
-        this._parameterRandomizer = parameterRandomizer ?? throw new ArgumentNullException(nameof(parameterRandomizer));
+        this._parameterRandomizer = parameterRandomizer;
     }
 
     /// <inheritdoc />
@@ -48,9 +33,17 @@ public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
     /// <inheritdoc />
     public IRandomValueSetter<TEntity> GetValueSetter() => this._valueSetter;
 
-    public IRandomizer<object> GetParameterRandomizer()
+    public IRandomizer<object?>? GetParameterRandomizer()
     {
         if (this._parameterRandomizer is null) return null;
         return new RandomizerBox<TValue>(this._parameterRandomizer);
+    }
+
+    private static string ExtractPropertyName(Expression<Func<TEntity, TValue>> propertySelector)
+    {
+        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
+
+        var property = propertySelector.GetPropertyInfo();
+        return property.Name;
     }
 }

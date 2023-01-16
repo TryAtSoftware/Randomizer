@@ -2,22 +2,20 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 
 public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
-    where TEntity : class
 {
-    private readonly HashSet<string> _randomizedMembers = new HashSet<string>();
-    private readonly Dictionary<string, IRandomizer<object>> _constructorRandomizers = new Dictionary<string, IRandomizer<object>>();
-    private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new Dictionary<string, IRandomValueSetter<TEntity>>();
+    private readonly HashSet<string> _randomizedMembers = new ();
+    private readonly Dictionary<string, IRandomizer<object>> _constructorRandomizers = new ();
+    private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new ();
 
     public ComplexRandomizer()
         : this(new GeneralInstanceBuilder<TEntity>())
     {
     }
 
-    public ComplexRandomizer([NotNull] IInstanceBuilder<TEntity> instanceBuilder)
+    public ComplexRandomizer(IInstanceBuilder<TEntity> instanceBuilder)
     {
         this.InstanceBuilder = instanceBuilder ?? throw new ArgumentNullException(nameof(instanceBuilder));
     }
@@ -28,14 +26,14 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
     /// <inheritdoc />
     public void AddRandomizationRule(IRandomizationRule<TEntity> rule)
     {
-        if (string.IsNullOrWhiteSpace(rule?.PropertyName) || this._randomizedMembers.Contains(rule.PropertyName)) return;
+        if (string.IsNullOrWhiteSpace(rule.PropertyName) || this._randomizedMembers.Contains(rule.PropertyName)) return;
         this.SetRuleInternally(rule);
     }
 
     /// <inheritdoc />
     public void OverrideRandomizationRule(IRandomizationRule<TEntity> rule)
     {
-        if (string.IsNullOrWhiteSpace(rule?.PropertyName)) return;
+        if (string.IsNullOrWhiteSpace(rule.PropertyName)) return;
         this.SetRuleInternally(rule);
     }
 
@@ -44,12 +42,13 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
     {
         var instanceBuildingArguments = new InstanceBuildingArguments(this._constructorRandomizers);
         var instanceBuildingResult = this.InstanceBuilder.PrepareNewInstance(instanceBuildingArguments);
-        var instance = instanceBuildingResult?.Instance;
-        if (instance is null) return null;
+        var instance = instanceBuildingResult.Instance;
+        if (instance is null) throw new InvalidOperationException("An object could not be instantiated by using the registered randomization rules.");
 
         foreach (var (name, randomValueSetter) in this._randomValueSetters)
         {
-            if (!instanceBuildingResult.IsUsed(name)) randomValueSetter.SetValue(instance);
+            if (!instanceBuildingResult.IsUsed(name)) 
+                randomValueSetter.SetValue(instance);
         }
 
         return instance;
@@ -57,7 +56,7 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
 
     private void SetRuleInternally(IRandomizationRule<TEntity> rule)
     {
-        if (rule is null || string.IsNullOrWhiteSpace(rule.PropertyName)) return;
+        if (string.IsNullOrWhiteSpace(rule.PropertyName)) return;
 
         var setter = rule.GetValueSetter();
         if (setter is null) this._randomValueSetters.Remove(rule.PropertyName);

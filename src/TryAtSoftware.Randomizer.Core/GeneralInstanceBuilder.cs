@@ -10,7 +10,7 @@ public class GeneralInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
 {
     private readonly IModelInfo<TEntity> _modelInfo;
 
-    public GeneralInstanceBuilder(IModelInfo<TEntity> modelInfo = null)
+    public GeneralInstanceBuilder(IModelInfo<TEntity>? modelInfo = null)
     {
         this._modelInfo = modelInfo ?? ModelInfo<TEntity>.Instance;
     }
@@ -33,14 +33,14 @@ public class GeneralInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
     private static bool CanConstructInstance(IInstanceBuildingArguments arguments, ParameterInfo[] constructorParameters)
         => constructorParameters.All(x => x.HasDefaultValue || arguments.ContainsParameter(x.Name));
 
-    private static (TEntity Instance, HashSet<string> UsedParameterNames) ConstructNewInstance(IInstanceBuildingArguments arguments, ParameterInfo[] parameters, Func<object[], TEntity> objectInitializer)
+    private static (TEntity Instance, HashSet<string> UsedParameterNames) ConstructNewInstance(IInstanceBuildingArguments arguments, ParameterInfo[] parameters, Func<object?[], TEntity> objectInitializer)
     {
-        var values = new object[parameters.Length];
+        var values = new object?[parameters.Length];
         var parameterNames = new HashSet<string>();
 
-        for (int i = 0; i < parameters.Length; i++)
+        for (var i = 0; i < parameters.Length; i++)
         {
-            object currentValue = null;
+            object? currentValue = null;
             if (arguments.ContainsParameter(parameters[i].Name))
             {
                 currentValue = arguments.GetParameterValue(parameters[i].Name);
