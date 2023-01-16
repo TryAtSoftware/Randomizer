@@ -6,6 +6,7 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 
 public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
 {
+    private readonly List<string> _orderedMembers = new ();
     private readonly HashSet<string> _randomizedMembers = new ();
     private readonly Dictionary<string, IRandomizer<object?>> _constructorRandomizers = new ();
     private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new ();
@@ -45,10 +46,10 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         var instance = instanceBuildingResult.Instance;
         if (instance is null) throw new InvalidOperationException("An object could not be instantiated by using the registered randomization rules.");
 
-        foreach (var (name, randomValueSetter) in this._randomValueSetters)
+        foreach (var name in this._orderedMembers)
         {
-            if (!instanceBuildingResult.IsUsed(name)) 
-                randomValueSetter.SetValue(instance);
+            var randomValueSetter = this._randomValueSetters[name];
+            if (!instanceBuildingResult.IsUsed(name)) randomValueSetter.SetValue(instance);
         }
 
         return instance;
@@ -65,6 +66,6 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         if (parameterRandomizer is null) this._constructorRandomizers.Remove(rule.PropertyName);
         else this._constructorRandomizers[rule.PropertyName] = parameterRandomizer;
 
-        this._randomizedMembers.Add(rule.PropertyName);
+        if (this._randomizedMembers.Add(rule.PropertyName)) this._orderedMembers.Add(rule.PropertyName);
     }
 }
