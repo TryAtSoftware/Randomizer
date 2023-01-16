@@ -7,7 +7,7 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
 {
     private readonly HashSet<string> _randomizedMembers = new ();
-    private readonly Dictionary<string, IRandomizer<object>> _constructorRandomizers = new ();
+    private readonly Dictionary<string, IRandomizer<object?>> _constructorRandomizers = new ();
     private readonly Dictionary<string, IRandomValueSetter<TEntity>> _randomValueSetters = new ();
 
     public ComplexRandomizer()
@@ -59,8 +59,7 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         if (string.IsNullOrWhiteSpace(rule.PropertyName)) return;
 
         var setter = rule.GetValueSetter();
-        if (setter is null) this._randomValueSetters.Remove(rule.PropertyName);
-        else this._randomValueSetters[rule.PropertyName] = setter;
+        this._randomValueSetters[rule.PropertyName] = setter;
 
         var parameterRandomizer = rule.GetParameterRandomizer();
         if (parameterRandomizer is null) this._constructorRandomizers.Remove(rule.PropertyName);
