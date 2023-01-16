@@ -3,12 +3,10 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 using TryAtSoftware.Extensions.Reflection;
 
 public static class ExpressionsHelper
 {
-    [NotNull]
     public static PropertyInfo GetPropertyInfo<T, TValue>(this Expression<Func<T, TValue>> expression)
     {
         var memberInfo = expression.GetMemberInfo();

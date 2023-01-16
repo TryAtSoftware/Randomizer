@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using JetBrains.Annotations;
 
 public static class RandomizationHelper
 {
@@ -15,8 +14,8 @@ public static class RandomizationHelper
 
     public static int RandomInteger(int inclusiveBottomBound, int exclusiveUpperBound)
     {
-        if (exclusiveUpperBound <= inclusiveBottomBound)
-            throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than or equal to the minimum.");
+        if (exclusiveUpperBound <= inclusiveBottomBound) throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than or equal to the minimum.");
+        if (exclusiveUpperBound == inclusiveBottomBound + 1) return inclusiveBottomBound;
 
         using var rng = new RNGCryptoServiceProvider();
         var data = new byte[4];
@@ -35,7 +34,7 @@ public static class RandomizationHelper
         return GetRandomString(RandomInteger(30, 80), charactersMask);
     }
 
-    public static string GetRandomString(int length, [NotNull] string charactersMask)
+    public static string GetRandomString(int length, string charactersMask)
     {
         if (length <= 0)
             throw new ArgumentOutOfRangeException(nameof(length));

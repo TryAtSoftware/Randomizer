@@ -15,8 +15,7 @@ public class CollectionRandomizerTests
         Assert.Throws<ArgumentNullException>(
             () =>
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                _ = new CollectionRandomizer<int>(null);
+                _ = new CollectionRandomizer<int>(null!);
             });
     }
 

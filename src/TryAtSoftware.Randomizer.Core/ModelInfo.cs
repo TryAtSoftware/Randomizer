@@ -10,20 +10,20 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 // NOTE: Tony Troeff, 18/04/2021 - This is the idea of this class - to provide a single `IMembersBinder` instance for any requested type represented by the generic parameter.
 public class ModelInfo<TEntity> : IModelInfo<TEntity>
 {
-    private readonly Dictionary<string, Action<TEntity, object>> _setters = new(StringComparer.OrdinalIgnoreCase);
-    private readonly List<(ParameterInfo[] Parameters, Func<object[], TEntity> ObjectInitializer)> _constructors = new();
+    private readonly Dictionary<string, Action<TEntity, object?>> _setters = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<(ParameterInfo[] Parameters, Func<object?[], TEntity> ObjectInitializer)> _constructors = new();
 
-    public ModelInfo()
+    private ModelInfo()
     {
-        RegisterAllProperties();
-        RegisterAllConstructors();
+        this.RegisterAllProperties();
+        this.RegisterAllConstructors();
     }
 
     public static ModelInfo<TEntity> Instance { get; } = Initialize();
 
-    public IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object[], TEntity> ObjectInitializer)> Constructors => this._constructors.AsReadOnly();
+    public IReadOnlyCollection<(ParameterInfo[] Parameters, Func<object?[], TEntity> ObjectInitializer)> Constructors => this._constructors.AsReadOnly();
 
-    public Action<TEntity, object> GetSetter(string propertyName)
+    public Action<TEntity, object?>? GetSetter(string propertyName)
     {
         if (this._setters.TryGetValue(propertyName, out var setter)) return setter;
         return null;
@@ -44,7 +44,7 @@ public class ModelInfo<TEntity> : IModelInfo<TEntity>
         foreach (var (propertyName, memberInfo) in propertiesBinder.MemberInfos)
         {
             var propertyInfo = (PropertyInfo)memberInfo;
-            var setterExpression = propertyInfo.ConstructPropertySetter<TEntity, object>();
+            var setterExpression = propertyInfo.ConstructPropertySetter<TEntity, object?>();
             this._setters[propertyName] = setterExpression.Compile();
         }
     }
