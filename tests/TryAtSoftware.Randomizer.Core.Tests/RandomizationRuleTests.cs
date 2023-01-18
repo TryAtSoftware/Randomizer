@@ -11,11 +11,15 @@ public static class RandomizationRuleTests
     public static void RandomizationRuleShouldBeInstantiatedCorrectly()
     {
         Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, valueSetter: null!));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, getRandomizer: null!));
         Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, randomizer: null!));
-        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, getRandomizer: null!, null));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(null!, valueSetter: null!, null));
         Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, valueSetter: null!));
         Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, randomizer: null!));
-        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, null!, null));
-        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, null!, new StringRandomizer()));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, valueSetter: null!, null));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, getRandomizer: null!, null));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, valueSetter: null!, new StringRandomizer()));
+        Assert.Throws<ArgumentNullException>(() => new RandomizationRule<Person, string>(p => p.Name, getRandomizer: null!, new StringRandomizer()));
     }
 }

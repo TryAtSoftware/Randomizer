@@ -16,8 +16,17 @@ public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
         if (randomizer is null) throw new ArgumentNullException(nameof(randomizer));
 
         this.PropertyName = ExtractPropertyName(propertySelector);
-        this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, randomizer, ModelInfo<TEntity>.Instance);
+        this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, _ => randomizer, ModelInfo<TEntity>.Instance);
         this._parameterRandomizer = randomizer;
+    }
+
+    public RandomizationRule(Expression<Func<TEntity, TValue>> propertySelector, Func<TEntity, IRandomizer<TValue>?> getRandomizer, IRandomizer<TValue>? parameterRandomizer = null)
+    {
+        if (getRandomizer is null) throw new ArgumentNullException(nameof(getRandomizer));
+
+        this.PropertyName = ExtractPropertyName(propertySelector);
+        this._valueSetter = new RandomValueSetter<TEntity, TValue>(this.PropertyName, getRandomizer, ModelInfo<TEntity>.Instance);
+        this._parameterRandomizer = parameterRandomizer;
     }
 
     public RandomizationRule(Expression<Func<TEntity, TValue>> propertySelector, IRandomValueSetter<TEntity> valueSetter, IRandomizer<TValue>? parameterRandomizer = null)
