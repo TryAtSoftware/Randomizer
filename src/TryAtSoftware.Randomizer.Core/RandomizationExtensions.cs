@@ -13,9 +13,17 @@ public static class RandomizationExtensions
         this IComplexRandomizer<TEntity> complexRandomizer,
         Expression<Func<TEntity, TValue>> propertySelector,
         IRandomizer<TValue> randomizer)
-        where TEntity : class
     {
         var rule = BuildRandomizationRule(propertySelector, randomizer);
+        complexRandomizer.AddRandomizationRule(rule);
+    }
+    
+    public static void AddRandomizationRule<TEntity, TValue>(
+        this IComplexRandomizer<TEntity> complexRandomizer,
+        Expression<Func<TEntity, TValue>> propertySelector,
+        Func<TEntity, IRandomizer<TValue>?> getRandomizer)
+    {
+        var rule = BuildRandomizationRule(propertySelector, getRandomizer);
         complexRandomizer.AddRandomizationRule(rule);
     }
 
@@ -23,13 +31,23 @@ public static class RandomizationExtensions
         this IComplexRandomizer<TEntity> complexRandomizer,
         Expression<Func<TEntity, TValue>> propertySelector,
         IRandomizer<TValue> randomizer)
-        where TEntity : class
     {
         var rule = BuildRandomizationRule(propertySelector, randomizer);
         complexRandomizer.OverrideRandomizationRule(rule);
     }
 
+    public static void OverrideRandomizationRule<TEntity, TValue>(
+        this IComplexRandomizer<TEntity> complexRandomizer,
+        Expression<Func<TEntity, TValue>> propertySelector,
+        Func<TEntity, IRandomizer<TValue>?> getRandomizer)
+    {
+        var rule = BuildRandomizationRule(propertySelector, getRandomizer);
+        complexRandomizer.OverrideRandomizationRule(rule);
+    }
+
     private static IRandomizationRule<TEntity> BuildRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
-        where TEntity : class
         => new RandomizationRule<TEntity, TValue>(propertySelector, randomizer);
+
+    private static IRandomizationRule<TEntity> BuildRandomizationRule<TEntity, TValue>(Expression<Func<TEntity, TValue>> propertySelector, Func<TEntity, IRandomizer<TValue>?> getRandomizer)
+        => new RandomizationRule<TEntity, TValue>(propertySelector, getRandomizer);
 }
