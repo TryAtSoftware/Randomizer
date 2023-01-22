@@ -6,13 +6,15 @@ using TryAtSoftware.Randomizer.Core.Interfaces;
 public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
 {
     private readonly string _propertyName;
-    private readonly IRandomizer<TValue> _randomizer;
+    private readonly Func<TEntity, IRandomizer<TValue>?> _getRandomizer;
     private readonly IModelInfo<TEntity> _modelInfo;
 
-    public RandomValueSetter(string propertyName, IRandomizer<TValue> randomizer, IModelInfo<TEntity> modelInfo)
+    public RandomValueSetter(string propertyName, Func<TEntity, IRandomizer<TValue>?> getRandomizer, IModelInfo<TEntity> modelInfo)
     {
-        this._propertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
-        this._randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+        if (string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentNullException(nameof(propertyName));
+        this._propertyName = propertyName;
+
+        this._getRandomizer = getRandomizer ?? throw new ArgumentNullException(nameof(getRandomizer));
         this._modelInfo = modelInfo ?? throw new ArgumentNullException(nameof(modelInfo));
     }
 
@@ -23,7 +25,10 @@ public class RandomValueSetter<TEntity, TValue> : IRandomValueSetter<TEntity>
         var setter = this._modelInfo.GetSetter(this._propertyName);
         if (setter is null) return;
 
-        var value = this._randomizer.PrepareRandomValue();
+        var randomizer = this._getRandomizer(instance);
+        if (randomizer is null) return;
+        
+        var value = randomizer.PrepareRandomValue();
         setter(instance, value);
     }
 }
