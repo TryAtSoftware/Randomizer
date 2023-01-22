@@ -1,5 +1,10 @@
 namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Moq;
+using TryAtSoftware.Randomizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Primitives;
 using TryAtSoftware.Randomizer.Core.Tests.InstanceBuilders;
 using TryAtSoftware.Randomizer.Core.Tests.Models;
@@ -40,5 +45,28 @@ public class ComplexInitializationTests
         var secondCar = complexRandomizer.PrepareRandomValue();
         Assert.NotNull(secondCar);
         Assert.NotSame(firstCar, secondCar);
+    }
+
+    [Fact]
+    public void OrderOfRandomizationRulesShouldBeAccepted()
+    {
+        var invocationOrder = new List<int>();
+        var valueSetters = new IRandomValueSetter<Car>[3];
+
+        for (var i = 0; i < 3; i++)
+        {
+            var valueSetterIndex = i;
+            var randomValueSetterMock = new Mock<IRandomValueSetter<Car>>();
+            randomValueSetterMock.Setup(x => x.SetValue(It.IsAny<Car>())).Callback(() => invocationOrder.Add(valueSetterIndex));
+            valueSetters[i] = randomValueSetterMock.Object;
+        }
+
+        var repetitionCount = 5;
+        for (var i = 0; i < repetitionCount; i++)
+        {
+            var complexRandomizer = new ComplexRandomizer<Car>();
+            var valueSetterIndices = Enumerable.Range(0, 3);
+                invocationOrder.Clear();
+        }
     }
 }
