@@ -97,7 +97,6 @@ using TryAtSoftware.Randomizer.Core.Primitives;
 public class PersonRandomizer : ComplexRandomizer<Person>
 {
     public PersonRandomizer()
-        : base(new GeneralInstanceBuilder<Person>())
     {
         this.AddRandomizationRule(p => p.Id, new GuidRandomizer());
         this.AddRandomizationRule(p => p.Name, new StringRandomizer());
@@ -118,10 +117,13 @@ If we want to examine the complex randomization process more deeply, we can see 
 
 ### Instance building phase
 
-Every complex randomizer uses an `IInstanceBuilder<T>`. You can see it in our example being passed to the base constructor.
+The `IInstanceBuilder<T>` is a component responsible for instantiating the complex type.
+By default, a `GeneralInstanceBuilder<T>` will be used if none is specified.
+This is the recommended option of instance building as it is implemented to find the most suitable constructor and invoke it (so you do not have to write any additional code).
+Furthermore, it tracks down the used parameters so the randomization rules defining them will not be used during the next phase of the complex randomization process.
 
-The instance builder is a component responsible for instantiating the complex type. You have a few options if you want to implement one:
-1. You can implement the `IInstanceBuilder<Person>` interface and define some custom instantiation logic. If you chose this option, you are in full control of the instantiation process.
+However, if you want to implement one by yourself, you have a few options:
+- You can implement the `IInstanceBuilder<Person>` interface and define some custom instantiation logic. If you chose this option, you are in full control of the instantiation process.
 ```C#
 using TryAtSoftware.Randomizer.Core;
 using TryAtSoftware.Randomizer.Core.Interfaces;
@@ -138,7 +140,7 @@ public class PersonInstanceBuilder : IInstanceBuilder<Person>
 }
 ```
 
-2. You may inherit the `SimpleInstanceBuilder<T>` class and implement the `PrepareNewInstance` method.
+- You may inherit the `SimpleInstanceBuilder<T>` class and implement the `PrepareNewInstance` method.
 This option should be used for really simple instance building that does not require any additional parameters being provided to the constructor.
 It is most suitable for complex types that have publicly exposed non-read-only members.
 ```C#
@@ -150,10 +152,14 @@ public class PersonInstanceBuilder : SimpleInstanceBuilder<Person>
 }
 ```
 
-3. The third (and most recommended) option is to reuse the `GeneralInstanceBuilder<T>` class like we did in the example.
-It is implemented to find the most suitable constructor and invoke it.
-Furthermore, it tracks down the used parameters so the randomization rules defining them will not be used during the next phase of the complex randomization process.
-
 ### Value setting phase
 
-In this phase the `SetValue()` method of every available randomization rule's value setter will be invoked.
+In this phase the `SetValue` method for the value setter of each registered randomization rule will be invoked.
+The order will be preserved - the value setter of a given randomization rule will be invoked before the value setter of a randomization rule that is registered after the given.
+
+## Best practices and recommendations
+
+- We do not recommend using `complex randomizers` with abstract classes or interfaces.
+While it is possible to make such a setup work, there may be some intricacies along the way.
+The `AddRandomizationRule` and `OverrideRandomizationRule` methods are publicly exposed so extension methods can be extracted (or even inheritance will get the job done for some simple cases).
+Another idea that is especially useful when dealing with many derived types that have behavioral but not structural differences, is to make the `complex randomizer` generic.
