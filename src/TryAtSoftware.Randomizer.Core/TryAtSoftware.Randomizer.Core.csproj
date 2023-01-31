@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 		
         <PackageId>TryAtSoftware.Randomizer</PackageId>
-        <Version>1.0.4-alpha.3</Version>
+        <Version>1.0.4-alpha.4</Version>
         <Authors>Tony Troeff</Authors>
         <RepositoryUrl>https://github.com/TryAtSoftware/Randomizer</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
