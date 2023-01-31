@@ -45,7 +45,7 @@ public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
     public IRandomizer<object?>? GetParameterRandomizer()
     {
         if (this._parameterRandomizer is null) return null;
-        return new RandomizerConverter<TValue, object?>(this._parameterRandomizer);
+        return new RandomizerBox<TValue>(this._parameterRandomizer);
     }
 
     private static string ExtractPropertyName(Expression<Func<TEntity, TValue>> propertySelector)
