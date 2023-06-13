@@ -2,9 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 
-public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
+public class ComplexRandomizer<TEntity> : IConfigurableComplexRandomizer<TEntity>
 {
     private readonly List<string> _orderedMembers = new ();
     private readonly HashSet<string> _randomizedMembers = new ();
@@ -25,20 +26,6 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
     public IInstanceBuilder<TEntity> InstanceBuilder { get; }
 
     /// <inheritdoc />
-    public void AddRandomizationRule(IRandomizationRule<TEntity> rule)
-    {
-        if (string.IsNullOrWhiteSpace(rule.PropertyName) || this._randomizedMembers.Contains(rule.PropertyName)) return;
-        this.SetRuleInternally(rule);
-    }
-
-    /// <inheritdoc />
-    public void OverrideRandomizationRule(IRandomizationRule<TEntity> rule)
-    {
-        if (string.IsNullOrWhiteSpace(rule.PropertyName)) return;
-        this.SetRuleInternally(rule);
-    }
-
-    /// <inheritdoc />
     public TEntity PrepareRandomValue()
     {
         var instanceBuildingArguments = new InstanceBuildingArguments(this._constructorRandomizers);
@@ -53,6 +40,31 @@ public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
         }
 
         return instance;
+    }
+
+    /// <inheritdoc />
+    public void Randomize(IRandomizationRule<TEntity> rule)
+    {
+        if (rule is null) throw new ArgumentNullException(nameof(rule));
+        this.SetRuleInternally(rule);
+    }
+
+    /// <inheritdoc />
+    public void Randomize<TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
+    {
+        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
+        if (randomizer is null) throw new ArgumentNullException(nameof(randomizer));
+        
+        this.SetRuleInternally(new RandomizationRule<TEntity,TValue>(propertySelector, randomizer));
+    }
+
+    /// <inheritdoc />
+    public void Randomize<TValue>(Expression<Func<TEntity, TValue>> propertySelector, Func<TEntity, IRandomizer<TValue>?> getRandomizer)
+    {
+        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
+        if (getRandomizer is null) throw new ArgumentNullException(nameof(getRandomizer));
+        
+        this.SetRuleInternally(new RandomizationRule<TEntity,TValue>(propertySelector, getRandomizer));
     }
 
     private void SetRuleInternally(IRandomizationRule<TEntity> rule)
