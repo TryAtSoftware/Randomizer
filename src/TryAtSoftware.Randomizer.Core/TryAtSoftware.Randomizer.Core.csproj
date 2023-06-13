@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 		
         <PackageId>TryAtSoftware.Randomizer</PackageId>
-        <Version>1.0.4-alpha.4</Version>
+        <Version>1.0.4</Version>
         <Authors>Tony Troeff</Authors>
         <RepositoryUrl>https://github.com/TryAtSoftware/Randomizer</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -14,14 +14,19 @@
         <Description>This package should be used to make your object initialization process in tests cleaner and easier than ever before.</Description>
         <Copyright>Copyright (c) Tony Troeff</Copyright>
         <PackageTags>tryatsoftware randomization random</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SonarAnalyzer.CSharp" Version="8.51.0.59060">
+      <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="TryAtSoftware.Extensions.Reflection" Version="1.1.1-alpha.2" />
+      <PackageReference Include="TryAtSoftware.Extensions.Reflection" Version="1.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
