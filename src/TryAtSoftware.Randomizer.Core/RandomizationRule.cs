@@ -2,7 +2,7 @@
 
 using System;
 using System.Linq.Expressions;
-using TryAtSoftware.Randomizer.Core.Helpers;
+using TryAtSoftware.Extensions.Reflection;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Primitives;
 
@@ -52,7 +52,7 @@ public class RandomizationRule<TEntity, TValue> : IRandomizationRule<TEntity>
     {
         if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
 
-        var property = propertySelector.GetPropertyInfo();
-        return property.Name;
+        var memberInfo = propertySelector.GetMemberInfo();
+        return memberInfo.Name;
     }
 }

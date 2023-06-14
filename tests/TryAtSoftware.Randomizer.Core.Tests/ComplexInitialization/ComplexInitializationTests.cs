@@ -17,11 +17,11 @@ public class ComplexInitializationTests
     {
         var instanceBuilder = new PersonInstanceBuilder();
         var complexRandomizer = new ComplexRandomizer<Person>(instanceBuilder);
-        complexRandomizer.AddRandomizationRule(p => p.Id, new GuidRandomizer());
-        complexRandomizer.AddRandomizationRule(p => p.Name, new StringRandomizer());
-        complexRandomizer.AddRandomizationRule(p => p.Age, new NumberRandomizer());
-        complexRandomizer.AddRandomizationRule(p => p.IsEmployed, new BooleanRandomizer());
-        complexRandomizer.AddRandomizationRule(p => p.EventDate, new DateTimeOffsetRandomizer());
+        complexRandomizer.Randomize(p => p.Id, new GuidRandomizer());
+        complexRandomizer.Randomize(p => p.Name, new StringRandomizer());
+        complexRandomizer.Randomize(p => p.Age, new NumberRandomizer());
+        complexRandomizer.Randomize(p => p.IsEmployed, new BooleanRandomizer());
+        complexRandomizer.Randomize(p => p.EventDate, new DateTimeOffsetRandomizer());
 
         var firstPerson = complexRandomizer.PrepareRandomValue();
         Assert.NotNull(firstPerson);
@@ -35,9 +35,9 @@ public class ComplexInitializationTests
     public void ComplexInstanceBuildingProcessShouldBeExecutedCorrectly()
     {
         var complexRandomizer = new ComplexRandomizer<Car>();
-        complexRandomizer.AddRandomizationRule(x => x.Make, new StringRandomizer());
-        complexRandomizer.AddRandomizationRule(x => x.Model, new StringRandomizer());
-        complexRandomizer.AddRandomizationRule(x => x.Year, new NumberRandomizer());
+        complexRandomizer.Randomize(x => x.Make, new StringRandomizer());
+        complexRandomizer.Randomize(x => x.Model, new StringRandomizer());
+        complexRandomizer.Randomize(x => x.Year, new NumberRandomizer());
 
         var firstCar = complexRandomizer.PrepareRandomValue();
         Assert.NotNull(firstCar);
@@ -83,7 +83,7 @@ public class ComplexInitializationTests
             for (var j = 0; j < randomizationRuleBuilders.Count; j++)
             {
                 var rule = randomizationRuleBuilders[j].Invoke(valueSetters[valueSetterIndices[j]]);
-                complexRandomizer.AddRandomizationRule(rule);
+                complexRandomizer.Randomize(rule);
             }
 
             var person = complexRandomizer.PrepareRandomValue();

@@ -98,11 +98,11 @@ public class PersonRandomizer : ComplexRandomizer<Person>
 {
     public PersonRandomizer()
     {
-        this.AddRandomizationRule(p => p.Id, new GuidRandomizer());
-        this.AddRandomizationRule(p => p.Name, new StringRandomizer());
-        this.AddRandomizationRule(p => p.Age, new NumberRandomizer());
-        this.AddRandomizationRule(p => p.IsEmployed, new BooleanRandomizer());
-        this.AddRandomizationRule(p => p.EventDate, new DateTimeOffsetRandomizer());
+        this.Randomize(p => p.Id, new GuidRandomizer());
+        this.Randomize(p => p.Name, new StringRandomizer());
+        this.Randomize(p => p.Age, new NumberRandomizer());
+        this.Randomize(p => p.IsEmployed, new BooleanRandomizer());
+        this.Randomize(p => p.EventDate, new DateTimeOffsetRandomizer());
     }
 }
 ```
@@ -161,5 +161,4 @@ The order will be preserved - the value setter of a given randomization rule wil
 
 - We do not recommend using `complex randomizers` with abstract classes or interfaces.
 While it is possible to make such a setup work, there may be some intricacies along the way.
-The `AddRandomizationRule` and `OverrideRandomizationRule` methods are publicly exposed so extension methods can be extracted (or even inheritance will get the job done for some simple cases).
 Another idea that is especially useful when dealing with many derived types that have behavioral but not structural differences, is to make the `complex randomizer` generic.
