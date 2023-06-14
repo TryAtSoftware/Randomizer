@@ -1,6 +1,7 @@
 namespace TryAtSoftware.Randomizer.Core.Tests;
 
 using System;
+using TryAtSoftware.Randomizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Primitives;
 using TryAtSoftware.Randomizer.Core.Tests.Models;
 using Xunit;
@@ -13,9 +14,11 @@ public class ComplexRandomizerTests
         var randomizer = new ComplexRandomizer<Person>();
         Assert.Throws<ArgumentNullException>(() => randomizer.Randomize(null!));
         Assert.Throws<ArgumentNullException>(() => randomizer.Randomize(null!, new StringRandomizer()));
-        Assert.Throws<ArgumentNullException>(() => randomizer.Randomize<string>(x => x.Name, randomizer: null!));
+        Assert.Throws<ArgumentNullException>(() => randomizer.Randomize<Person, string>(x => x.Name, randomizer: null!));
+        Assert.Throws<ArgumentNullException>(() => ((IComplexRandomizer<Person>)null!).Randomize(x => x.Name, new StringRandomizer()));
         Assert.Throws<ArgumentNullException>(() => randomizer.Randomize(null!, _ => new StringRandomizer()));
-        Assert.Throws<ArgumentNullException>(() => randomizer.Randomize<string>(x => x.Name, getRandomizer: null!));
+        Assert.Throws<ArgumentNullException>(() => randomizer.Randomize<Person, string>(x => x.Name, getRandomizer: null!));
+        Assert.Throws<ArgumentNullException>(() => ((IComplexRandomizer<Person>)null!).Randomize(x => x.Name, _ => new StringRandomizer()));
     }
 
     [Fact]
