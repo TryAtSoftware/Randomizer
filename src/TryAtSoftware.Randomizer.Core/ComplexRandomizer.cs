@@ -2,10 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 
-public class ComplexRandomizer<TEntity> : IConfigurableComplexRandomizer<TEntity>
+public class ComplexRandomizer<TEntity> : IComplexRandomizer<TEntity>
 {
     private readonly List<string> _orderedMembers = new ();
     private readonly HashSet<string> _randomizedMembers = new ();
@@ -47,24 +46,6 @@ public class ComplexRandomizer<TEntity> : IConfigurableComplexRandomizer<TEntity
     {
         if (rule is null) throw new ArgumentNullException(nameof(rule));
         this.SetRuleInternally(rule);
-    }
-
-    /// <inheritdoc />
-    public void Randomize<TValue>(Expression<Func<TEntity, TValue>> propertySelector, IRandomizer<TValue> randomizer)
-    {
-        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
-        if (randomizer is null) throw new ArgumentNullException(nameof(randomizer));
-        
-        this.SetRuleInternally(new RandomizationRule<TEntity,TValue>(propertySelector, randomizer));
-    }
-
-    /// <inheritdoc />
-    public void Randomize<TValue>(Expression<Func<TEntity, TValue>> propertySelector, Func<TEntity, IRandomizer<TValue>?> getRandomizer)
-    {
-        if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
-        if (getRandomizer is null) throw new ArgumentNullException(nameof(getRandomizer));
-        
-        this.SetRuleInternally(new RandomizationRule<TEntity,TValue>(propertySelector, getRandomizer));
     }
 
     private void SetRuleInternally(IRandomizationRule<TEntity> rule)
