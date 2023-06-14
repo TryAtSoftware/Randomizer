@@ -162,3 +162,7 @@ The order will be preserved - the value setter of a given randomization rule wil
 - We do not recommend using `complex randomizers` with abstract classes or interfaces.
 While it is possible to make such a setup work, there may be some intricacies along the way.
 Another idea that is especially useful when dealing with many derived types that have behavioral but not structural differences, is to make the `complex randomizer` generic.
+
+# Helpful Links
+
+For additional information on troubleshooting, migration guides, answers to Frequently asked questions (FAQ), and more, you can refer to the [Wiki pages](https://github.com/TryAtSoftware/Randomizer/wiki) of this project.
