@@ -32,7 +32,7 @@ public class RandomizationHelperTests
     public void GetRandomStringCombinationShouldValidateMask()
     {
         Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomStringCombination(5, null!));
-        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomStringCombination(5, Array.Empty<char>()));
+        Assert.Throws<ArgumentException>(() => RandomizationHelper.GetRandomStringCombination(5, Array.Empty<char>()));
     }
 
     [Fact]
@@ -195,7 +195,7 @@ public class RandomizationHelperTests
             Assert.DoesNotContain(randomPastDateTime, seen);
             seen.Add(randomPastDateTime);
 
-            var randomFutureDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
+            var randomFutureDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: false);
             Assert.True(randomFutureDateTime > DateTimeOffset.Now);
 
             Assert.DoesNotContain(randomFutureDateTime, seen);
