@@ -8,7 +8,7 @@ using Xunit;
 public class RandomizationHelperTests
 {
     private const int ITERATIONS = 500;
-    
+
     [Fact]
     public void GetRandomStringShouldValidateLength()
     {
@@ -20,6 +20,19 @@ public class RandomizationHelperTests
     {
         Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, null!));
         Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, string.Empty));
+    }
+
+    [Fact]
+    public void GetRandomStringCombinationShouldValidateLength()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomStringCombination(-1, new[] { 'a' }));
+    }
+
+    [Fact]
+    public void GetRandomStringCombinationShouldValidateMask()
+    {
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomStringCombination(5, null!));
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomStringCombination(5, Array.Empty<char>()));
     }
 
     [Fact]
@@ -139,13 +152,13 @@ public class RandomizationHelperTests
     }
 
     [Fact]
-    public void RandomDoubleShouldWorkCorrectly()
+    public void RandomDoubleShouldBeGeneratedCorrectly()
     {
         var seen = new HashSet<double>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomDouble();
-            
+
             Assert.True(randomNumber >= 0);
             Assert.True(randomNumber < 1);
 
@@ -155,18 +168,38 @@ public class RandomizationHelperTests
     }
 
     [Fact]
-    public void RandomFloatShouldWorkCorrectly()
+    public void RandomFloatShouldBeGeneratedCorrectly()
     {
         var seen = new HashSet<float>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomFloat();
-            
+
             Assert.True(randomNumber >= 0);
             Assert.True(randomNumber < 1);
 
             Assert.DoesNotContain(randomNumber, seen);
             seen.Add(randomNumber);
+        }
+    }
+
+    [Fact]
+    public void RandomDateTimeOffsetShouldBeGeneratedCorrectly()
+    {
+        var seen = new HashSet<DateTimeOffset>();
+        for (var i = 0; i < ITERATIONS; i++)
+        {
+            var randomPastDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
+            Assert.True(randomPastDateTime < DateTimeOffset.Now);
+
+            Assert.DoesNotContain(randomPastDateTime, seen);
+            seen.Add(randomPastDateTime);
+
+            var randomFutureDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
+            Assert.True(randomFutureDateTime > DateTimeOffset.Now);
+
+            Assert.DoesNotContain(randomFutureDateTime, seen);
+            seen.Add(randomPastDateTime);
         }
     }
 
