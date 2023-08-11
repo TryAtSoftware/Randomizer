@@ -7,6 +7,7 @@ using System.Text;
 
 public static class RandomizationHelper
 {
+    private const double RANDOM_DOUBLE_CONSTANT = 1.0 / (1UL << 53);
     public const string LOWER_CASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
     public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public const string DIGITS = "0123456789";
@@ -14,13 +15,31 @@ public static class RandomizationHelper
 
     private static Random _random = new ();
 
-    public static int RandomInteger() => RandomInteger(0, int.MaxValue);
+    public static int RandomInteger() => RandomInteger(int.MinValue, int.MaxValue, upperBoundIsExclusive: false);
 
-    public static int RandomInteger(int inclusiveBottomBound, int exclusiveUpperBound)
+    public static int RandomInteger(int inclusiveLowerBound, int exclusiveUpperBound) => RandomInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
+
+    public static int RandomInteger(int inclusiveLowerBound, int upperBound, bool upperBoundIsExclusive)
     {
-        if (exclusiveUpperBound <= inclusiveBottomBound) throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than or equal to the minimum.");
+        var randomAdditive = RandomUnsignedInteger(0U, (uint)(upperBound - inclusiveLowerBound), upperBoundIsExclusive);
+        return inclusiveLowerBound + (int)randomAdditive;
+    }
 
-        var range = (uint)(exclusiveUpperBound - inclusiveBottomBound);
+    public static uint RandomUnsignedInteger() => RandomUnsignedInteger(uint.MinValue, uint.MaxValue, upperBoundIsExclusive: false);
+
+    public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint exclusiveUpperBound) => RandomUnsignedInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
+
+    public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint upperBound, bool upperBoundIsExclusive)
+    {
+        if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException("The upper bound for the random number that should be generated cannot be lower than or equal to the lower bound.");
+        
+        var range = upperBound - inclusiveLowerBound;
+        if (!upperBoundIsExclusive)
+        {
+            if (range == uint.MaxValue) return RandomUInt32();
+            range++;
+        }
+
         var limit = uint.MaxValue - uint.MaxValue % range;
 
         uint result;
@@ -29,16 +48,34 @@ public static class RandomizationHelper
             result = RandomUInt32();
         } while (result > limit);
 
-        return inclusiveBottomBound + (int)(result % range);
+        return inclusiveLowerBound + result % range;
     }
 
-    public static long RandomLongInteger() => RandomLongInteger(0, long.MaxValue);
+    public static long RandomLongInteger() => RandomLongInteger(long.MinValue, long.MaxValue, upperBoundIsExclusive: false);
 
-    public static long RandomLongInteger(long inclusiveBottomBound, long exclusiveUpperBound)
+    public static long RandomLongInteger(long inclusiveLowerBound, long exclusiveUpperBound) => RandomLongInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
+
+    public static long RandomLongInteger(long inclusiveLowerBound, long upperBound, bool upperBoundIsExclusive)
     {
-        if (exclusiveUpperBound <= inclusiveBottomBound) throw new InvalidOperationException("The maximum value for the random number that should be generated cannot be lower than or equal to the minimum.");
+        var randomAdditive = RandomUnsignedLongInteger(0U, (ulong)(upperBound - inclusiveLowerBound), upperBoundIsExclusive);
+        return inclusiveLowerBound + (long)randomAdditive;
+    }
 
-        var range = (ulong)(exclusiveUpperBound - inclusiveBottomBound);
+    public static ulong RandomUnsignedLongInteger() => RandomUnsignedLongInteger(ulong.MinValue, ulong.MaxValue, upperBoundIsExclusive: false);
+
+    public static ulong RandomUnsignedLongInteger(ulong inclusiveLowerBound, ulong exclusiveUpperBound) => RandomUnsignedLongInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
+
+    public static ulong RandomUnsignedLongInteger(ulong inclusiveLowerBound, ulong upperBound, bool upperBoundIsExclusive)
+    {
+        if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException("The upper bound for the random number that should be generated cannot be lower than or equal to the lower bound.");
+        
+        var range = upperBound - inclusiveLowerBound;
+        if (!upperBoundIsExclusive)
+        {
+            if (range == ulong.MaxValue) return RandomUInt64();
+            range++;
+        }
+
         var limit = ulong.MaxValue - ulong.MaxValue % range;
 
         ulong result;
@@ -47,8 +84,10 @@ public static class RandomizationHelper
             result = RandomUInt64();
         } while (result > limit);
 
-        return inclusiveBottomBound + (long)(result % range);
+        return inclusiveLowerBound + result % range;
     }
+
+    public static double RandomDouble() => (RandomUInt64() >> 11) * RANDOM_DOUBLE_CONSTANT;
 
     public static string GetRandomString() => GetRandomString(RandomInteger(30, 80), ALL_CHARACTERS);
 
