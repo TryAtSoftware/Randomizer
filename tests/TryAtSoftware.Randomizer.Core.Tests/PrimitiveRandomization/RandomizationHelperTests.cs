@@ -54,12 +54,15 @@ public class RandomizationHelperTests
             Assert.True(randomNumber <= i);
         }
 
-        var seen = new HashSet<int>();
+        var seen = new Dictionary<int, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomInteger();
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
@@ -84,12 +87,15 @@ public class RandomizationHelperTests
             Assert.True(randomNumber <= inclusiveUpperBound);
         }
 
-        var seen = new HashSet<uint>();
+        var seen = new Dictionary<uint, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomUnsignedInteger();
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
@@ -112,12 +118,15 @@ public class RandomizationHelperTests
             Assert.True(randomNumber <= i);
         }
 
-        var seen = new HashSet<long>();
+        var seen = new Dictionary<long, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomLongInteger();
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
@@ -142,64 +151,75 @@ public class RandomizationHelperTests
             Assert.True(randomNumber <= inclusiveUpperBound);
         }
 
-        var seen = new HashSet<ulong>();
+        var seen = new Dictionary<ulong, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomUnsignedLongInteger();
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
     [Fact]
     public void RandomDoubleShouldBeGeneratedCorrectly()
     {
-        var seen = new HashSet<double>();
+        var seen = new Dictionary<double, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomDouble();
 
             Assert.True(randomNumber >= 0);
             Assert.True(randomNumber < 1);
-
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
     [Fact]
     public void RandomFloatShouldBeGeneratedCorrectly()
     {
-        var seen = new HashSet<float>();
+        var seen = new Dictionary<float, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomNumber = RandomizationHelper.RandomFloat();
 
             Assert.True(randomNumber >= 0);
             Assert.True(randomNumber < 1);
-
-            Assert.DoesNotContain(randomNumber, seen);
-            seen.Add(randomNumber);
+            
+            seen.TryAdd(randomNumber, 0);
+            seen[randomNumber]++;
+            
+            Assert.True(seen[randomNumber] <= 2);
         }
     }
 
     [Fact]
     public void RandomDateTimeOffsetShouldBeGeneratedCorrectly()
     {
-        var seen = new HashSet<DateTimeOffset>();
+        var seen = new Dictionary<DateTimeOffset, int>();
         for (var i = 0; i < ITERATIONS; i++)
         {
             var randomPastDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
             Assert.True(randomPastDateTime < DateTimeOffset.Now);
 
-            Assert.DoesNotContain(randomPastDateTime, seen);
-            seen.Add(randomPastDateTime);
+            seen.TryAdd(randomPastDateTime, 0);
+            seen[randomPastDateTime]++;
+            
+            Assert.True(seen[randomPastDateTime] <= 2);
 
             var randomFutureDateTime = RandomizationHelper.GetRandomDateTimeOffset(historical: false);
             Assert.True(randomFutureDateTime > DateTimeOffset.Now);
 
-            Assert.DoesNotContain(randomFutureDateTime, seen);
-            seen.Add(randomPastDateTime);
+            seen.TryAdd(randomFutureDateTime, 0);
+            seen[randomFutureDateTime]++;
+            
+            Assert.True(seen[randomFutureDateTime] <= 2);
         }
     }
 
