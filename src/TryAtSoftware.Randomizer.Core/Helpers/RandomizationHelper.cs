@@ -8,6 +8,8 @@ using System.Text;
 public static class RandomizationHelper
 {
     private const double RANDOM_DOUBLE_CONSTANT = 1.0 / (1UL << 53);
+    private const float RANDOM_SINGLE_CONSTANT = 1.0f / (1UL << 24);
+
     public const string LOWER_CASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
     public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public const string DIGITS = "0123456789";
@@ -80,6 +82,8 @@ public static class RandomizationHelper
     }
 
     public static double RandomDouble() => (RandomUInt64() >> 11) * RANDOM_DOUBLE_CONSTANT;
+    
+    public static float RandomFloat() => (RandomUInt64() >> 40) * RANDOM_SINGLE_CONSTANT;
 
     public static string GetRandomString() => GetRandomString(RandomInteger(30, 80), ALL_CHARACTERS);
 
