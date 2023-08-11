@@ -16,28 +16,100 @@ public static class RandomizationHelper
     public const string DIGITS = "0123456789";
     public const string ALL_CHARACTERS = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
 
+    /// <summary>
+    /// Generates a random 32-bit integer in the range [Int32.MinValue, Int32.MaxValue].
+    /// </summary>
     public static int RandomInteger() => RandomInteger(int.MinValue, int.MaxValue, upperBoundIsExclusive: false);
 
+    /// <summary>
+    /// Generates a random 32-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="exclusiveUpperBound"/>).
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="exclusiveUpperBound">One more than the greatest value that can be generated. This parameter is exclusive.</param>
     public static int RandomInteger(int inclusiveLowerBound, int exclusiveUpperBound) => RandomInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
+    /// <summary>
+    /// Generates a random 32-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>) if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// Generates a random 32-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>] if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="upperBound">
+    /// One more than the greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// The greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// Whether this parameter is inclusive or exclusive, depends on <paramref name="upperBoundIsExclusive"/>.</param>
+    /// <param name="upperBoundIsExclusive">A value indicating whether the <paramref name="upperBound"/> is an inclusive or an exclusive parameter.</param>
     public static int RandomInteger(int inclusiveLowerBound, int upperBound, bool upperBoundIsExclusive) => int.MinValue + (int)RandomUnsignedInteger((uint)(inclusiveLowerBound - int.MinValue), (uint)(upperBound - int.MinValue), upperBoundIsExclusive);
 
+    /// <summary>
+    /// Generates a random 32-bit unsigned integer in the range [UInt32.MinValue, UInt32.MaxValue].
+    /// </summary>
     public static uint RandomUnsignedInteger() => RandomUnsignedInteger(uint.MinValue, uint.MaxValue, upperBoundIsExclusive: false);
 
+    /// <summary>
+    /// Generates a random 32-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="exclusiveUpperBound"/>).
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="exclusiveUpperBound">One more than the greatest value that can be generated. This parameter is exclusive.</param>
     public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint exclusiveUpperBound) => RandomUnsignedInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
+    /// <summary>
+    /// Generates a random 32-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>) if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// Generates a random 32-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>] if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="upperBound">
+    /// One more than the greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// The greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// Whether this parameter is inclusive or exclusive, depends on <paramref name="upperBoundIsExclusive"/>.</param>
+    /// <param name="upperBoundIsExclusive">A value indicating whether the <paramref name="upperBound"/> is an inclusive or an exclusive parameter.</param>
     public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint upperBound, bool upperBoundIsExclusive) => (uint) RandomUnsignedLongInteger(inclusiveLowerBound, upperBound, upperBoundIsExclusive);
 
+    /// <summary>
+    /// Generates a random 64-bit integer in the range [Int64.MinValue, Int64.MaxValue].
+    /// </summary>
     public static long RandomLongInteger() => RandomLongInteger(long.MinValue, long.MaxValue, upperBoundIsExclusive: false);
 
+    /// <summary>
+    /// Generates a random 64-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="exclusiveUpperBound"/>).
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="exclusiveUpperBound">One more than the greatest value that can be generated. This parameter is exclusive.</param>
     public static long RandomLongInteger(long inclusiveLowerBound, long exclusiveUpperBound) => RandomLongInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
+    /// <summary>
+    /// Generates a random 64-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>) if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// Generates a random 64-bit integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>] if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="upperBound">
+    /// One more than the greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// The greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// Whether this parameter is inclusive or exclusive, depends on <paramref name="upperBoundIsExclusive"/>.</param>
+    /// <param name="upperBoundIsExclusive">A value indicating whether the <paramref name="upperBound"/> is an inclusive or an exclusive parameter.</param>
     public static long RandomLongInteger(long inclusiveLowerBound, long upperBound, bool upperBoundIsExclusive) => long.MinValue + (long)RandomUnsignedLongInteger((ulong)(inclusiveLowerBound - long.MinValue), (ulong)(upperBound - long.MinValue), upperBoundIsExclusive);
 
+    /// <summary>
+    /// Generates a random 64-bit unsigned integer in the range [Int64.MinValue, Int64.MaxValue].
+    /// </summary>
     public static ulong RandomUnsignedLongInteger() => RandomUnsignedLongInteger(ulong.MinValue, ulong.MaxValue, upperBoundIsExclusive: false);
 
+    /// <summary>
+    /// Generates a random 64-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="exclusiveUpperBound"/>).
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="exclusiveUpperBound">One more than the greatest value that can be generated. This parameter is exclusive.</param>
     public static ulong RandomUnsignedLongInteger(ulong inclusiveLowerBound, ulong exclusiveUpperBound) => RandomUnsignedLongInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
+    /// <summary>
+    /// Generates a random 64-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>) if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// Generates a random 64-bit unsigned integer in the range [<paramref name="inclusiveLowerBound"/>, <paramref name="upperBound"/>] if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// </summary>
+    /// <param name="inclusiveLowerBound">The lowest value that can be generated. This parameter is inclusive.</param>
+    /// <param name="upperBound">
+    /// One more than the greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>true</c>.
+    /// The greatest value that can be generated if <paramref name="upperBoundIsExclusive"/> is <c>false</c>.
+    /// Whether this parameter is inclusive or exclusive, depends on <paramref name="upperBoundIsExclusive"/>.</param>
+    /// <param name="upperBoundIsExclusive">A value indicating whether the <paramref name="upperBound"/> is an inclusive or an exclusive parameter.</param>
     public static ulong RandomUnsignedLongInteger(ulong inclusiveLowerBound, ulong upperBound, bool upperBoundIsExclusive)
     {
         if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException(GetInvalidRangeExceptionMessage(upperBoundIsExclusive));
@@ -60,10 +132,20 @@ public static class RandomizationHelper
         return inclusiveLowerBound + result % range;
     }
 
+    /// <summary>
+    /// Generates a random floating-point number of type <see cref="double"/> in the range [0, 1).
+    /// </summary>
     public static double RandomDouble() => (RandomUInt64() >> 11) * RANDOM_DOUBLE_CONSTANT;
     
+    /// <summary>
+    /// Generates a random floating-point number of type <see cref="float"/> in the range [0, 1).
+    /// </summary>
     public static float RandomFloat() => (RandomUInt64() >> 40) * RANDOM_SINGLE_CONSTANT;
 
+    /// <summary>
+    /// Generates an array filled with random bytes.
+    /// </summary>
+    /// <param name="length">The length of the generated array of bytes.</param>
     public static byte[] RandomBytes(int length)
     {
         var result = new byte[length];
