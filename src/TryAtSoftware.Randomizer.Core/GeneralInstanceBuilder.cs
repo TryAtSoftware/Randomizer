@@ -31,7 +31,7 @@ public class GeneralInstanceBuilder<TEntity> : IInstanceBuilder<TEntity>
     }
 
     private static bool CanConstructInstance(IInstanceBuildingArguments arguments, ParameterInfo[] constructorParameters)
-        => constructorParameters.All(x => x.HasDefaultValue || arguments.ContainsParameter(x.Name));
+        => Array.TrueForAll(constructorParameters, x => x.HasDefaultValue || arguments.ContainsParameter(x.Name));
 
     private static (TEntity Instance, HashSet<string> UsedParameterNames) ConstructNewInstance(IInstanceBuildingArguments arguments, ParameterInfo[] parameters, Func<object?[], TEntity> objectInitializer)
     {
