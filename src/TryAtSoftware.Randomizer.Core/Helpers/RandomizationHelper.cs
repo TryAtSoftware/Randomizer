@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 public static class RandomizationHelper
@@ -14,8 +15,6 @@ public static class RandomizationHelper
     public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public const string DIGITS = "0123456789";
     public const string ALL_CHARACTERS = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
-
-    private static Random _random = new ();
 
     public static int RandomInteger() => RandomInteger(int.MinValue, int.MaxValue, upperBoundIsExclusive: false);
 
@@ -85,6 +84,13 @@ public static class RandomizationHelper
     
     public static float RandomFloat() => (RandomUInt64() >> 40) * RANDOM_SINGLE_CONSTANT;
 
+    public static byte[] RandomBytes(int length)
+    {
+        var result = new byte[length];
+        RandomNumberGenerator.Fill(result);
+        return result;
+    }
+
     public static string GetRandomString() => GetRandomString(RandomInteger(30, 80), ALL_CHARACTERS);
 
     public static string GetRandomString(int length, string charactersMask)
@@ -122,17 +128,7 @@ public static class RandomizationHelper
         return historical ? DateTimeOffset.Now.Add(-randTimeSpan) : DateTimeOffset.Now.Add(randTimeSpan);
     }
 
-    private static uint RandomUInt32()
-    {
-        var buffer = new byte[4];
-        _random.NextBytes(buffer);
-        return BitConverter.ToUInt32(buffer);
-    }
+    private static uint RandomUInt32() => BitConverter.ToUInt32(RandomBytes(4));
 
-    private static ulong RandomUInt64()
-    {
-        var buffer = new byte[8];
-        _random.NextBytes(buffer);
-        return BitConverter.ToUInt64(buffer);
-    }
+    private static ulong RandomUInt64() => BitConverter.ToUInt64(RandomBytes(8));
 }

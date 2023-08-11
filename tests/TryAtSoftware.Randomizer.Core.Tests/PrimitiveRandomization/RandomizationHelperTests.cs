@@ -22,12 +22,21 @@ public class RandomizationHelperTests
     [Fact]
     public void RandomIntegerShouldNeverExceedBoundaries()
     {
-        for (var i = 1; i <= 1000; i++)
+        const int iterations = 10000;
+        for (var i = 1; i <= iterations; i++)
         {
             var randomInteger = RandomizationHelper.RandomInteger(0, i);
 
             Assert.True(randomInteger >= 0);
             Assert.True(randomInteger < i);
+        }
+
+        for (var i = 1; i <= iterations; i++)
+        {
+            var randomInteger = RandomizationHelper.RandomInteger(0, i, upperBoundIsExclusive: false);
+
+            Assert.True(randomInteger >= 0);
+            Assert.True(randomInteger <= i);
         }
     }
 
@@ -36,10 +45,6 @@ public class RandomizationHelperTests
     [InlineData(3, 1)]
     public void RandomIntegerGenerationWithInvalidBoundariesShouldFail(int min, int max)
     {
-        Assert.Throws<InvalidOperationException>(
-            () =>
-            {
-                _ = RandomizationHelper.RandomInteger(min, max);
-            });
+        Assert.Throws<InvalidOperationException>(() => _ = RandomizationHelper.RandomInteger(min, max));
     }
 }
