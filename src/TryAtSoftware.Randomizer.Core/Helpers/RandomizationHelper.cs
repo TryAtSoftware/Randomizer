@@ -19,11 +19,7 @@ public static class RandomizationHelper
 
     public static int RandomInteger(int inclusiveLowerBound, int exclusiveUpperBound) => RandomInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
-    public static int RandomInteger(int inclusiveLowerBound, int upperBound, bool upperBoundIsExclusive)
-    {
-        var randomAdditive = RandomUnsignedInteger(0U, (uint)(upperBound - inclusiveLowerBound), upperBoundIsExclusive);
-        return inclusiveLowerBound + (int)randomAdditive;
-    }
+    public static int RandomInteger(int inclusiveLowerBound, int upperBound, bool upperBoundIsExclusive) => int.MinValue + (int)RandomUnsignedInteger((uint)(inclusiveLowerBound - int.MinValue), (uint)(upperBound - int.MinValue), upperBoundIsExclusive);
 
     public static uint RandomUnsignedInteger() => RandomUnsignedInteger(uint.MinValue, uint.MaxValue, upperBoundIsExclusive: false);
 
@@ -55,11 +51,7 @@ public static class RandomizationHelper
 
     public static long RandomLongInteger(long inclusiveLowerBound, long exclusiveUpperBound) => RandomLongInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
-    public static long RandomLongInteger(long inclusiveLowerBound, long upperBound, bool upperBoundIsExclusive)
-    {
-        var randomAdditive = RandomUnsignedLongInteger(0U, (ulong)(upperBound - inclusiveLowerBound), upperBoundIsExclusive);
-        return inclusiveLowerBound + (long)randomAdditive;
-    }
+    public static long RandomLongInteger(long inclusiveLowerBound, long upperBound, bool upperBoundIsExclusive) => long.MinValue + (long)RandomUnsignedLongInteger((ulong)(inclusiveLowerBound - long.MinValue), (ulong)(upperBound - long.MinValue), upperBoundIsExclusive);
 
     public static ulong RandomUnsignedLongInteger() => RandomUnsignedLongInteger(ulong.MinValue, ulong.MaxValue, upperBoundIsExclusive: false);
 
@@ -121,7 +113,7 @@ public static class RandomizationHelper
 
     public static DateTimeOffset GetRandomDateTimeOffset(bool historical = false)
     {
-        var ticks = RandomLongInteger(0, long.MaxValue);
+        var ticks = RandomLongInteger(0, 100000);
         var randTimeSpan = new TimeSpan(ticks);
         return historical ? DateTimeOffset.Now.Add(-randTimeSpan) : DateTimeOffset.Now.Add(randTimeSpan);
     }
