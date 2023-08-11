@@ -1,6 +1,7 @@
 namespace TryAtSoftware.Randomizer.Core.Tests.PrimitiveRandomization;
 
 using System;
+using System.Collections.Generic;
 using TryAtSoftware.Randomizer.Core.Helpers;
 using Xunit;
 
@@ -12,31 +13,99 @@ public class RandomizationHelperTests
         Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomString(-1, "mask"));
     }
 
-    [Theory]
-    [MemberData(nameof(TestsHelper.GetInvalidStringParameters), MemberType = typeof(TestsHelper))]
-    public void GetRandomStringShouldValidateMask(string mask)
+    [Fact]
+    public void GetRandomStringShouldValidateMask()
     {
-        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, mask));
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, null!));
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, string.Empty));
     }
 
     [Fact]
-    public void RandomIntegerShouldNeverExceedBoundaries()
+    public void RandomIntegerShouldBeGeneratedCorrectly()
     {
         const int iterations = 10000;
         for (var i = 1; i <= iterations; i++)
         {
-            var randomInteger = RandomizationHelper.RandomInteger(0, i);
+            var randomNumber = RandomizationHelper.RandomInteger(0, i);
 
-            Assert.True(randomInteger >= 0);
-            Assert.True(randomInteger < i);
+            Assert.True(randomNumber >= 0);
+            Assert.True(randomNumber < i);
         }
 
         for (var i = 1; i <= iterations; i++)
         {
-            var randomInteger = RandomizationHelper.RandomInteger(0, i, upperBoundIsExclusive: false);
+            var randomNumber = RandomizationHelper.RandomInteger(0, i, upperBoundIsExclusive: false);
 
-            Assert.True(randomInteger >= 0);
-            Assert.True(randomInteger <= i);
+            Assert.True(randomNumber >= 0);
+            Assert.True(randomNumber <= i);
+        }
+
+        var seen = new HashSet<int>();
+        for (var i = 0; i < iterations; i++)
+        {
+            var randomNumber = RandomizationHelper.RandomInteger();
+            Assert.DoesNotContain(randomNumber, seen);
+            seen.Add(randomNumber);
+        }
+    }
+
+    [Fact]
+    public void RandomUnsignedIntegerShouldBeGeneratedCorrectly()
+    {
+        const uint iterations = 10000;
+        for (var i = 1U; i <= iterations; i++)
+        {
+            uint inclusiveLowerBound = 1000U, exclusiveUpperBound = 1000U + i;
+            var randomNumber = RandomizationHelper.RandomUnsignedInteger(inclusiveLowerBound, exclusiveUpperBound);
+
+            Assert.True(randomNumber >= inclusiveLowerBound);
+            Assert.True(randomNumber < exclusiveUpperBound);
+        }
+
+        for (var i = 1U; i <= iterations; i++)
+        {
+            uint inclusiveLowerBound = 1000U, inclusiveUpperBound = 1000U + i;
+            var randomNumber = RandomizationHelper.RandomUnsignedInteger(inclusiveLowerBound, inclusiveUpperBound, upperBoundIsExclusive: false);
+
+            Assert.True(randomNumber >= inclusiveLowerBound);
+            Assert.True(randomNumber <= inclusiveUpperBound);
+        }
+
+        var seen = new HashSet<uint>();
+        for (var i = 0; i < iterations; i++)
+        {
+            var randomNumber = RandomizationHelper.RandomUnsignedInteger();
+            Assert.DoesNotContain(randomNumber, seen);
+            seen.Add(randomNumber);
+        }
+    }
+
+    [Fact]
+    public void RandomLongIntegerShouldBeGeneratedCorrectly()
+    {
+        const int iterations = 10000;
+        for (var i = 1; i <= iterations; i++)
+        {
+            var randomNumber = RandomizationHelper.RandomLongInteger(0, i);
+
+            Assert.True(randomNumber >= 0);
+            Assert.True(randomNumber < i);
+        }
+
+        for (var i = 1; i <= iterations; i++)
+        {
+            var randomNumber = RandomizationHelper.RandomLongInteger(0, i, upperBoundIsExclusive: false);
+
+            Assert.True(randomNumber >= 0);
+            Assert.True(randomNumber <= i);
+        }
+
+        var seen = new HashSet<long>();
+        for (var i = 0; i < iterations; i++)
+        {
+            var randomNumber = RandomizationHelper.RandomLongInteger();
+            Assert.DoesNotContain(randomNumber, seen);
+            seen.Add(randomNumber);
         }
     }
 

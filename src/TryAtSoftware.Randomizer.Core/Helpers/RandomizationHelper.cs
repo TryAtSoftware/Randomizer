@@ -26,27 +26,7 @@ public static class RandomizationHelper
 
     public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint exclusiveUpperBound) => RandomUnsignedInteger(inclusiveLowerBound, exclusiveUpperBound, upperBoundIsExclusive: true);
 
-    public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint upperBound, bool upperBoundIsExclusive)
-    {
-        if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException("The upper bound for the random number that should be generated cannot be lower than or equal to the lower bound.");
-        
-        var range = upperBound - inclusiveLowerBound;
-        if (!upperBoundIsExclusive)
-        {
-            if (range == uint.MaxValue) return RandomUInt32();
-            range++;
-        }
-
-        var limit = uint.MaxValue - uint.MaxValue % range;
-
-        uint result;
-        do
-        {
-            result = RandomUInt32();
-        } while (result > limit);
-
-        return inclusiveLowerBound + result % range;
-    }
+    public static uint RandomUnsignedInteger(uint inclusiveLowerBound, uint upperBound, bool upperBoundIsExclusive) => (uint) RandomUnsignedLongInteger(inclusiveLowerBound, upperBound, upperBoundIsExclusive);
 
     public static long RandomLongInteger() => RandomLongInteger(long.MinValue, long.MaxValue, upperBoundIsExclusive: false);
 
@@ -60,7 +40,7 @@ public static class RandomizationHelper
 
     public static ulong RandomUnsignedLongInteger(ulong inclusiveLowerBound, ulong upperBound, bool upperBoundIsExclusive)
     {
-        if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException("The upper bound for the random number that should be generated cannot be lower than or equal to the lower bound.");
+        if (upperBound < inclusiveLowerBound || (upperBoundIsExclusive && upperBound == inclusiveLowerBound)) throw new InvalidOperationException(GetInvalidRangeExceptionMessage(upperBoundIsExclusive));
         
         var range = upperBound - inclusiveLowerBound;
         if (!upperBoundIsExclusive)
@@ -95,10 +75,8 @@ public static class RandomizationHelper
 
     public static string GetRandomString(int length, string charactersMask)
     {
-        if (length <= 0)
-            throw new ArgumentOutOfRangeException(nameof(length));
-        if (string.IsNullOrWhiteSpace(charactersMask))
-            throw new ArgumentNullException(nameof(charactersMask));
+        if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
+        if (string.IsNullOrEmpty(charactersMask)) throw new ArgumentNullException(nameof(charactersMask));
 
         // Returns a random string with given length, it uses the characters above.
         return GetRandomStringCombination(length, charactersMask.ToList().AsReadOnly());
@@ -106,10 +84,9 @@ public static class RandomizationHelper
 
     public static string GetRandomStringCombination(int length, IReadOnlyList<char> possibleChars)
     {
-        if (possibleChars is null)
-            throw new ArgumentNullException(nameof(possibleChars));
-        if (length <= 0)
-            throw new ArgumentOutOfRangeException(nameof(length));
+        if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
+        if (possibleChars is null) throw new ArgumentNullException(nameof(possibleChars));
+        if (possibleChars.Count == 0) throw new ArgumentException("The characters mask must include at least one character.", nameof(possibleChars));
 
         var sb = new StringBuilder(length);
 
@@ -128,7 +105,11 @@ public static class RandomizationHelper
         return historical ? DateTimeOffset.Now.Add(-randTimeSpan) : DateTimeOffset.Now.Add(randTimeSpan);
     }
 
-    private static uint RandomUInt32() => BitConverter.ToUInt32(RandomBytes(4));
-
     private static ulong RandomUInt64() => BitConverter.ToUInt64(RandomBytes(8));
+
+    private static string GetInvalidRangeExceptionMessage(bool upperBoundIsExclusive)
+    {
+        if (upperBoundIsExclusive) return "The exclusive upper bound cannot be lower than or equal to the lower bound."; 
+        return "The inclusive upper bound cannot be lower than the lower bound.";
+    }
 }
