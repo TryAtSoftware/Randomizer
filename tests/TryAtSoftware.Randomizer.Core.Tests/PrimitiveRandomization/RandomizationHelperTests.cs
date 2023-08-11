@@ -171,10 +171,11 @@ public class RandomizationHelperTests
     }
 
     [Theory]
-    [InlineData(1, 1)]
-    [InlineData(3, 1)]
-    public void RandomIntegerGenerationWithInvalidBoundariesShouldFail(int min, int max)
+    [InlineData(1UL, 1UL, true)]
+    [InlineData(1UL, 0UL, true)]
+    [InlineData(1UL, 0UL, false)]
+    public void RandomIntegerGenerationWithInvalidBoundariesShouldFail(ulong min, ulong max, bool upperBoundIsExclusive)
     {
-        Assert.Throws<InvalidOperationException>(() => _ = RandomizationHelper.RandomInteger(min, max));
+        Assert.Throws<InvalidOperationException>(() => _ = RandomizationHelper.RandomUnsignedLongInteger(min, max, upperBoundIsExclusive));
     }
 }
