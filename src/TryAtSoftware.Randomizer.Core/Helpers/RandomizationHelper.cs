@@ -2,18 +2,35 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
+/// <summary>
+/// A static class containing helper methods for randomizing primitives.
+/// </summary>
 public static class RandomizationHelper
 {
     private const double RANDOM_DOUBLE_CONSTANT = 1.0 / (1UL << 53);
     private const float RANDOM_SINGLE_CONSTANT = 1.0f / (1UL << 24);
 
+    /// <summary>
+    /// All letters from the Latin alphabet in lower case.
+    /// </summary>
     public const string LOWER_CASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+    
+    /// <summary>
+    /// All letters from the Latin alphabet in upper case.
+    /// </summary>
     public const string UPPER_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    /// <summary>
+    /// All digits.
+    /// </summary>
     public const string DIGITS = "0123456789";
+    
+    /// <summary>
+    /// All letters from the Latin alphabet in lower and upper case and all digits.
+    /// </summary>
     public const string ALL_CHARACTERS = $"{LOWER_CASE_LETTERS}{UPPER_CASE_LETTERS}{DIGITS}";
 
     /// <summary>
@@ -153,33 +170,59 @@ public static class RandomizationHelper
         return result;
     }
 
+    /// <summary>
+    /// Generates a random string with random length using the <see cref="ALL_CHARACTERS"/> mask.
+    /// </summary>
     public static string GetRandomString() => GetRandomString(RandomInteger(30, 80), ALL_CHARACTERS);
 
+    /// <summary>
+    /// Generates a random string by a given length and characters mask.
+    /// </summary>
+    /// <param name="length">The length of the string that should be generated.</param>
+    /// <param name="charactersMask">All characters that can be used when generating the string.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown, if the provided <paramref name="length"/> is lower than or equal to zero.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="charactersMask"/> is null or empty.</exception>
     public static string GetRandomString(int length, string charactersMask)
     {
         if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
         if (string.IsNullOrEmpty(charactersMask)) throw new ArgumentNullException(nameof(charactersMask));
 
         // Returns a random string with given length, it uses the characters above.
-        return GetRandomStringCombination(length, charactersMask.ToList().AsReadOnly());
+        return GetRandomString(length, charactersMask.ToCharArray());
     }
 
-    public static string GetRandomStringCombination(int length, IReadOnlyList<char> possibleChars)
+    /// <summary>
+    /// Generates a random string by a given length and characters mask.
+    /// </summary>
+    /// <param name="length">The length of the string that should be generated.</param>
+    /// <param name="charactersMask">All characters that can be used when generating the string.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown, if the provided <paramref name="length"/> is lower than or equal to zero.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="charactersMask"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if the provided <paramref name="charactersMask"/> is empty.</exception>
+    public static string GetRandomString(int length, IReadOnlyList<char> charactersMask)
     {
         if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
-        if (possibleChars is null) throw new ArgumentNullException(nameof(possibleChars));
-        if (possibleChars.Count == 0) throw new ArgumentException("The characters mask must include at least one character.", nameof(possibleChars));
+        if (charactersMask is null) throw new ArgumentNullException(nameof(charactersMask));
+        if (charactersMask.Count == 0) throw new ArgumentException("The characters mask must include at least one character.", nameof(charactersMask));
 
         var sb = new StringBuilder(length);
 
         for (var i = 0; i < length; i++)
-            sb.Append(possibleChars[RandomInteger(0, possibleChars.Count)]);
+            sb.Append(charactersMask[RandomInteger(0, charactersMask.Count)]);
 
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Generates a random boolean.
+    /// </summary>
+    /// <param name="percents">The likelihood (out of 100) for this method to return <c>true</c>.</param>
     public static bool RandomProbability(int percents = 50) => RandomInteger(0, 100) < percents;
 
+    /// <summary>
+    /// Generates a random <see cref="DateTimeOffset"/> value.
+    /// </summary>
+    /// <param name="historical">Value indicating whether the generated value should be in the past (if <c>true</c>) or in the future (if <c>false</c>).</param>
     public static DateTimeOffset GetRandomDateTimeOffset(bool historical = false)
     {
         var ticks = RandomLongInteger(0, 100000);
