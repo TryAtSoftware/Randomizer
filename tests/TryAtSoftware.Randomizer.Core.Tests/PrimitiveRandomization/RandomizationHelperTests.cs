@@ -13,26 +13,17 @@ public class RandomizationHelperTests
     public void GetRandomStringShouldValidateLength()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomString(-1, "mask"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomString(-1, new[] { 'a' }));
     }
 
     [Fact]
     public void GetRandomStringShouldValidateMask()
     {
-        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, null!));
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, (string)null!));
         Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, string.Empty));
-    }
 
-    [Fact]
-    public void GetRandomStringCombinationShouldValidateLength()
-    {
-        Assert.Throws<ArgumentOutOfRangeException>(() => RandomizationHelper.GetRandomStringCombination(-1, new[] { 'a' }));
-    }
-
-    [Fact]
-    public void GetRandomStringCombinationShouldValidateMask()
-    {
-        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomStringCombination(5, null!));
-        Assert.Throws<ArgumentException>(() => RandomizationHelper.GetRandomStringCombination(5, Array.Empty<char>()));
+        Assert.Throws<ArgumentNullException>(() => RandomizationHelper.GetRandomString(5, (char[])null!));
+        Assert.Throws<ArgumentException>(() => RandomizationHelper.GetRandomString(5, Array.Empty<char>()));
     }
 
     [Fact]
