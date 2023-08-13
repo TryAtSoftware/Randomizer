@@ -124,11 +124,33 @@ await using MemoryStream stream = new MemoryStream(streamContent);
 await UploadContentAsync(stream, cancellationToken);
 ```
 
+### Generating random boolean values
+
+It is quite often necessary to have a mechanism of generating a random boolean value.
+The method we can use in this case is called `RandomProbability`.
+For example, when making random changes to some elements of a given array - for each index we can generate a random `bool` denoting if a change should be made.
+
+```C#
+int[] array = new int[100];
+for (int i = 0; i < array.Length; i++)
+{
+    if (RandomizationHelper.RandomProbability()) array[i] = RandomizationHelper.RandomInteger();
+    else array[i] = i;
+}
+```
+
+This method accepts an optional parameter called `percents`.
+It can be used to specify the likelihood of the generated value being `true`.
+
+```C#
+// The generated value will be `true` in 1% of the cases (respectively `false` in the other 99%).
+bool rarelyTrue = RandomizationHelper.RandomProbability(percents: 1);
+
+// The generated value will be `true` in 99% of the cases (respectively `false` in the other 1%).
+bool rarelyFalse = RandomizationHelper.RandomProbability(percents: 99);
+```
+
 ### Generating random `string` values
-
-TODO
-
-### Generating random `bool` values
 
 TODO
 
