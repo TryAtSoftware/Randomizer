@@ -42,9 +42,7 @@ There are multiple methods that can be used to generate random integers:
 - `RandomLongInteger` generates a random 64-bit signed integer within a given range.
 - `RandomUnsignedLongInteger` generates a random 64-bit unsigned integer within a given range.
 
-#### Use cases
-
-##### Without range restrictions
+#### Without range restrictions
 
 If no parameters are provided, no range constraints will be applied when generating the random integer.
 
@@ -53,7 +51,7 @@ If no parameters are provided, no range constraints will be applied when generat
 int randomInteger = RandomizationHelper.RandomInteger();
 ```
 
-##### With range restrictions
+#### With range restrictions
 
 If two numbers are provided (inclusive lower bound and exclusive upper bound), the generated integer will be in the `[inclusive_lower_bound, exclusive_upper_bound)` range.
 _As the provided upper bound is exclusive, it will equal one more than the greatest value that can be generated._
@@ -150,9 +148,35 @@ bool rarelyTrue = RandomizationHelper.RandomProbability(percents: 1);
 bool rarelyFalse = RandomizationHelper.RandomProbability(percents: 99);
 ```
 
-### Generating random `string` values
+### Generating random text
 
-TODO
+Along with generating numbers, this is one of the most commonly used methods for randomizing primitive values.
+In practice, software developers work with text incessantly.
+We often have to use classes exposing some of the following properties - name, description, address, note, etc.
+
+In this section, you can review some standard applications of the `GetRandomString` methods.
+
+
+#### Without adjustments
+
+By default, the `GetRandomString` method will return a newly generated sequence of characters (letters from the Latin alphabet in lower and upper case and all digits) with random length (in rhe range `[30, 80]`).
+
+```C#
+string randomText = RandomizationHelper.GetRandomString();
+```
+
+#### With adjustments
+
+When randomizing text, there are two parameters than could be adjusted - its length and the list of characters to use.
+There are some overloads of the `GetRandomString` method that support this.
+
+Moreover, the `RandomizationHelper` class exposes some constants for the most common groups of characters to use when generating random text.
+
+```C#
+string randomText = RandomizationHelper.GetRandomString(length: 20, charactersMask: RandomizationHelper.UPPER_CASE_LETTERS);
+```
+
+> If the same character is included multiple times within the characters mask, its probability of being used increases proportionally.
 
 ### Generating random `DateTimeOffset` values
 

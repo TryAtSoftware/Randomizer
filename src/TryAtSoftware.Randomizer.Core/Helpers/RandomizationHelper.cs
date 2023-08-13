@@ -173,7 +173,7 @@ public static class RandomizationHelper
     /// <summary>
     /// Generates a random string with random length using the <see cref="ALL_CHARACTERS"/> mask.
     /// </summary>
-    public static string GetRandomString() => GetRandomString(RandomInteger(30, 80), ALL_CHARACTERS);
+    public static string GetRandomString() => GetRandomString(RandomInteger(30, 80, upperBoundIsExclusive: false), ALL_CHARACTERS);
 
     /// <summary>
     /// Generates a random string by a given length and characters mask.
