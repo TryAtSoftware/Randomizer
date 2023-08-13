@@ -29,7 +29,28 @@ Using the `NuGet package manager` console within Visual Studio, you can install 
 Or using the `dotnet CLI` from a terminal window:
 > dotnet add package TryAtSoftware.Randomizer
 
-## Creating your first randomizer
+## Randomizing primitive values
+
+Most of the necessary methods for generating primitive values are contained within the `RandomizationHelper` class.
+In the next sections you can read more about every one of them.
+
+### Generating random numeric values
+
+TODO
+
+### Generating random `string` values
+
+TODO
+
+### Generating random `bool` values
+
+TODO
+
+### Generating random `DateTimeOffset` values
+
+TODO
+
+## Custom randomizers
 
 To define a randomizer, you need to create a class that implements the `IRandomizer<T>` interface, where `T` is the type of information this component should be responsible for randomizing.
 For example, imagine that you want to create a randomizer that generates a random `DateTime` instance in the future.
