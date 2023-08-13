@@ -156,7 +156,6 @@ We often have to use classes exposing some of the following properties - name, d
 
 In this section, you can review some standard applications of the `GetRandomString` methods.
 
-
 #### Without adjustments
 
 By default, the `GetRandomString` method will return a newly generated sequence of characters (letters from the Latin alphabet in lower and upper case and all digits) with random length (in rhe range `[30, 80]`).
@@ -178,9 +177,21 @@ string randomText = RandomizationHelper.GetRandomString(length: 20, charactersMa
 
 > If the same character is included multiple times within the characters mask, its probability of being used increases proportionally.
 
-### Generating random `DateTimeOffset` values
+### Generating random date and time values
 
-TODO
+Just after text and numbers, the other most common type of primitive values developers use on a daily basis, are date and time values.
+We often have to use classes exposing some of the following properties - created at, modified at, birthday, time of arrival, etc.
+
+#### `DateTimeOffset`
+
+The `GetRandomDateTimeOffset` method can be used to generated random `DateTimeOffset` values in the past or in the future (relative to the time of generation).
+
+```C#
+var pastDateTimeOffset = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
+
+// NOTE: The `historical` parameter has a default value of `false`, so it can be safely omitted.
+var futureDateTimeOffset = RandomizationHelper.GetRandomDateTimeOffset(historical: false);
+```
 
 ## Custom randomizers
 
