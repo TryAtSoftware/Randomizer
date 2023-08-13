@@ -34,9 +34,69 @@ Or using the `dotnet CLI` from a terminal window:
 Most of the necessary methods for generating primitive values are contained within the `RandomizationHelper` class.
 In the next sections you can read more about every one of them.
 
-### Generating random numeric values
+### Generating random integers
 
-TODO
+There are multiple methods that can be used to generate random integers:
+- `RandomInteger` generates a random 32-bit signed integer within a given range.
+- `RandomUnsignedInteger` generates a random 32-bit unsigned integer within a given range.
+- `RandomLongInteger` generates a random 64-bit signed integer within a given range.
+- `RandomUnsignedLongInteger` generates a random 64-bit unsigned integer within a given range.
+
+#### Use cases
+
+##### Without range restrictions
+
+If no parameters are provided, no range constraints will be applied when generating the random integer.
+
+```C#
+// The next line will generate a random 32-bit signed integer in range: [int.MinValue, int.MaxValue]
+int randomInteger = RandomizationHelper.RandomInteger();
+```
+
+##### With range restrictions
+
+If two numbers are provided (inclusive lower bound and exclusive upper bound), the generated integer will be in the \[**inclusive_lower_bound**, **exclusive_upper_bound**) range.
+_As the provided upper bound is exclusive, it will equal one more than the greatest value that can be generated._
+
+```C#
+// The next line will generate a random 64-bit unsigned integer in range: [0, 100)
+// NOTE: The upper bound is exclusive, so the maximum value that can be generated is 100 - 1 = 99.
+ulong randomInteger = RandomizationHelper.RandomUnsignedLongInteger(0UL, 100UL);
+```
+
+This overload is very convenient whenever a random index should be generated.
+
+```C#
+int[] array = new int[100];
+for (int i = 0; i < array.Length; i++) array[i] = i;
+
+var randomIndex = RandomizationHelper.RandomInteger(0, array.Length);
+```
+
+If the upper bound should be inclusive, we suggest using the third overload - it accepts an additional boolean value defining whether or not the upper bound should be interpreted as exclusive or inclusive.
+
+```C#
+// NOTE: All statements in the following example are equivalent!
+
+// The next line will generate a random 32-bit unsigned integer in range: [1, 1000]
+// NOTE: The upper bound is inclusive, so it equals the maximum value that can be generated.
+long randomInteger1 = RandomizationHelper.RandomLongInteger(1, 1000, upperBoundIsExclusive: false);
+long randomInteger2 = RandomizationHelper.RandomLongInteger(1, 1001, upperBoundIsExclusive: true);
+long randomInteger2 = RandomizationHelper.RandomLongInteger(1, 1001);
+```
+> If only one of the bounds is known, you can use `T.MinValue` or `T.MaxValue` as fillers (where `T` is the corresponding numeric type).
+
+#### Inclusive maximum values
+
+Most of the existing methods for generating random numerical values do not include `T.MaxValue` (where `T` is the corresponding numeric type).
+We have noticed that this limitation is completely unnecessary and it is isolated from our code base.
+
+```C#
+// The next line will generate a random 64-bit signed integer in range: [0, long.MaxValue]
+long randomInteger = RandomizationHelper.RandomLongInteger(0, long.MaxValue, upperBoundIsExclusive: false);
+```
+
+> We cannot use the logic from the previous section as `T.MaxValue + 1` will cause an overflow.
 
 ### Generating random `string` values
 
