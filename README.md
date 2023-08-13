@@ -55,7 +55,7 @@ int randomInteger = RandomizationHelper.RandomInteger();
 
 ##### With range restrictions
 
-If two numbers are provided (inclusive lower bound and exclusive upper bound), the generated integer will be in the \[**inclusive_lower_bound**, **exclusive_upper_bound**) range.
+If two numbers are provided (inclusive lower bound and exclusive upper bound), the generated integer will be in the `[inclusive_lower_bound, exclusive_upper_bound)` range.
 _As the provided upper bound is exclusive, it will equal one more than the greatest value that can be generated._
 
 ```C#
@@ -97,6 +97,32 @@ long randomInteger = RandomizationHelper.RandomLongInteger(0, long.MaxValue, upp
 ```
 
 > We cannot use the logic from the previous section as `T.MaxValue + 1` will cause an overflow.
+
+### Generating random floating-point numbers
+
+There are two methods that can be used - `RandomDouble` and `RandomFloat`.
+They both have the same characteristics and will generate a random floating-point value of the corresponding type within the range `[0, 1)`.
+
+```C#
+double randomDouble = RandomizationHelper.RandomDouble();
+float randomFloat = RandomizationHelper.RandomFloat();
+```
+
+### Generating array of random bytes
+
+The `RandomBytes` method can be very useful when we work with byte arrays, streams, files. etc.
+It will generate an array of random byte values by a given length.
+
+```C#
+// When working with files:
+byte[] fileContent = RandomizationHelper.RandomBytes(length: 1024);
+await File.WriteAllBytesAsync("path/to/file", fileContent, cancellationToken);
+
+// When working with streams:
+byte[] streamContent = RandomizationHelper.RandomBytes(length: 1024);
+await using MemoryStream stream = new MemoryStream(streamContent);
+await UploadContentAsync(stream, cancellationToken);
+```
 
 ### Generating random `string` values
 
