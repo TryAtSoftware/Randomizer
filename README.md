@@ -29,7 +29,171 @@ Using the `NuGet package manager` console within Visual Studio, you can install 
 Or using the `dotnet CLI` from a terminal window:
 > dotnet add package TryAtSoftware.Randomizer
 
-## Creating your first randomizer
+## Randomizing primitive values
+
+Most of the necessary methods for generating primitive values are contained within the `RandomizationHelper` class.
+In the next sections you can read more about every one of them.
+
+### Generating random integers
+
+There are multiple methods that can be used to generate random integers:
+- `RandomInteger` generates a random 32-bit signed integer within a given range.
+- `RandomUnsignedInteger` generates a random 32-bit unsigned integer within a given range.
+- `RandomLongInteger` generates a random 64-bit signed integer within a given range.
+- `RandomUnsignedLongInteger` generates a random 64-bit unsigned integer within a given range.
+
+#### Without range restrictions
+
+If no parameters are provided, no range constraints will be applied when generating the random integer.
+
+```C#
+// The next line will generate a random 32-bit signed integer in range: [int.MinValue, int.MaxValue]
+int randomInteger = RandomizationHelper.RandomInteger();
+```
+
+#### With range restrictions
+
+If two numbers are provided (inclusive lower bound and exclusive upper bound), the generated integer will be in the `[inclusive_lower_bound, exclusive_upper_bound)` range.
+_As the provided upper bound is exclusive, it will equal one more than the greatest value that can be generated._
+
+```C#
+// The next line will generate a random 64-bit unsigned integer in range: [0, 100)
+// NOTE: The upper bound is exclusive, so the maximum value that can be generated is 100 - 1 = 99.
+ulong randomInteger = RandomizationHelper.RandomUnsignedLongInteger(0UL, 100UL);
+```
+
+This overload is very convenient whenever a random index should be generated.
+
+```C#
+int[] array = new int[100];
+for (int i = 0; i < array.Length; i++) array[i] = i;
+
+var randomIndex = RandomizationHelper.RandomInteger(0, array.Length);
+```
+
+If the upper bound should be inclusive, we suggest using the third overload - it accepts an additional boolean value defining whether or not the upper bound should be interpreted as exclusive or inclusive.
+
+```C#
+// NOTE: All statements in the following example are equivalent!
+
+// The next line will generate a random 32-bit unsigned integer in range: [1, 1000]
+// NOTE: The upper bound is inclusive, so it equals the maximum value that can be generated.
+long randomInteger1 = RandomizationHelper.RandomLongInteger(1, 1000, upperBoundIsExclusive: false);
+long randomInteger2 = RandomizationHelper.RandomLongInteger(1, 1001, upperBoundIsExclusive: true);
+long randomInteger2 = RandomizationHelper.RandomLongInteger(1, 1001);
+```
+> If only one of the bounds is known, you can use `T.MinValue` or `T.MaxValue` as fillers (where `T` is the corresponding numeric type).
+
+#### Inclusive maximum values
+
+Most of the existing methods for generating random numerical values do not include `T.MaxValue` (where `T` is the corresponding numeric type).
+We have noticed that this limitation is completely unnecessary and it is isolated from our code base.
+
+```C#
+// The next line will generate a random 64-bit signed integer in range: [0, long.MaxValue]
+long randomInteger = RandomizationHelper.RandomLongInteger(0, long.MaxValue, upperBoundIsExclusive: false);
+```
+
+> We cannot use the logic from the previous section as `T.MaxValue + 1` will cause an overflow.
+
+### Generating random floating-point numbers
+
+There are two methods that can be used - `RandomDouble` and `RandomFloat`.
+They both have the same characteristics and will generate a random floating-point value of the corresponding type within the range `[0, 1)`.
+
+```C#
+double randomDouble = RandomizationHelper.RandomDouble();
+float randomFloat = RandomizationHelper.RandomFloat();
+```
+
+### Generating array of random bytes
+
+The `RandomBytes` method can be very useful when we work with byte arrays, streams, files. etc.
+It will generate an array of random byte values by a given length.
+
+```C#
+// When working with files:
+byte[] fileContent = RandomizationHelper.RandomBytes(length: 1024);
+await File.WriteAllBytesAsync("path/to/file", fileContent, cancellationToken);
+
+// When working with streams:
+byte[] streamContent = RandomizationHelper.RandomBytes(length: 1024);
+await using MemoryStream stream = new MemoryStream(streamContent);
+await UploadContentAsync(stream, cancellationToken);
+```
+
+### Generating random boolean values
+
+It is quite often necessary to have a mechanism of generating a random boolean value.
+The method we can use in this case is called `RandomProbability`.
+For example, when making random changes to some elements of a given array - for each index we can generate a random `bool` denoting if a change should be made.
+
+```C#
+int[] array = new int[100];
+for (int i = 0; i < array.Length; i++)
+{
+    if (RandomizationHelper.RandomProbability()) array[i] = RandomizationHelper.RandomInteger();
+    else array[i] = i;
+}
+```
+
+This method accepts an optional parameter called `percents`.
+It can be used to specify the likelihood of the generated value being `true`.
+
+```C#
+// The generated value will be `true` in 1% of the cases (respectively `false` in the other 99%).
+bool rarelyTrue = RandomizationHelper.RandomProbability(percents: 1);
+
+// The generated value will be `true` in 99% of the cases (respectively `false` in the other 1%).
+bool rarelyFalse = RandomizationHelper.RandomProbability(percents: 99);
+```
+
+### Generating random text
+
+Along with generating numbers, this is one of the most commonly used methods for randomizing primitive values.
+In practice, software developers work with text incessantly.
+We often have to use classes exposing some of the following properties - name, description, address, note, etc.
+
+In this section, you can review some standard applications of the `GetRandomString` methods.
+
+#### Without adjustments
+
+By default, the `GetRandomString` method will return a newly generated sequence of characters (letters from the Latin alphabet in lower and upper case and all digits) with random length (in rhe range `[30, 80]`).
+
+```C#
+string randomText = RandomizationHelper.GetRandomString();
+```
+
+#### With adjustments
+
+When randomizing text, there are two parameters than could be adjusted - its length and the list of characters to use.
+There are some overloads of the `GetRandomString` method that support this.
+
+Moreover, the `RandomizationHelper` class exposes some constants for the most common groups of characters to use when generating random text.
+
+```C#
+string randomText = RandomizationHelper.GetRandomString(length: 20, charactersMask: RandomizationHelper.UPPER_CASE_LETTERS);
+```
+
+> If the same character is included multiple times within the characters mask, its probability of being used increases proportionally.
+
+### Generating random date and time values
+
+Just after text and numbers, the other most common type of primitive values developers use on a daily basis, are date and time values.
+We often have to use classes exposing some of the following properties - created at, modified at, birthday, time of arrival, etc.
+
+#### `DateTimeOffset`
+
+The `GetRandomDateTimeOffset` method can be used to generated random `DateTimeOffset` values in the past or in the future (relative to the time of generation).
+
+```C#
+var pastDateTimeOffset = RandomizationHelper.GetRandomDateTimeOffset(historical: true);
+
+// NOTE: The `historical` parameter has a default value of `false`, so it can be safely omitted.
+var futureDateTimeOffset = RandomizationHelper.GetRandomDateTimeOffset(historical: false);
+```
+
+## Custom randomizers
 
 To define a randomizer, you need to create a class that implements the `IRandomizer<T>` interface, where `T` is the type of information this component should be responsible for randomizing.
 For example, imagine that you want to create a randomizer that generates a random `DateTime` instance in the future.
