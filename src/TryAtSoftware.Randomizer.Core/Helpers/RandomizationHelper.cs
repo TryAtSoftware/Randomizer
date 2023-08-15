@@ -213,6 +213,11 @@ public static class RandomizationHelper
         return sb.ToString();
     }
 
+#pragma warning disable S1133 // This directive should be removed soon. See issue #52
+    [Obsolete("This method will be removed with the next major release. Use `GetRandomString` instead!")]
+#pragma warning restore S1133
+    public static string GetRandomStringCombination(int length, IReadOnlyList<char> possibleChars) => GetRandomString(length, possibleChars);
+
     /// <summary>
     /// Generates a random boolean.
     /// </summary>
