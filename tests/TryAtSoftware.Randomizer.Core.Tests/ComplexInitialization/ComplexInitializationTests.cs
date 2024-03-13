@@ -3,7 +3,7 @@ namespace TryAtSoftware.Randomizer.Core.Tests.ComplexInitialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moq;
+using NSubstitute;
 using TryAtSoftware.Randomizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Primitives;
 using TryAtSoftware.Randomizer.Core.Tests.InstanceBuilders;
@@ -60,21 +60,21 @@ public class ComplexInitializationTests
         };
 
         var invocationOrder = new List<int>();
-        var valueSetterMocks = new Mock<IRandomValueSetter<Person>>[randomizationRuleBuilders.Count];
         var valueSetters = new IRandomValueSetter<Person>[randomizationRuleBuilders.Count];
 
         for (var i = 0; i < randomizationRuleBuilders.Count; i++)
         {
-            var randomValueSetterMock = new Mock<IRandomValueSetter<Person>>();
+            var randomValueSetterMock = Substitute.For<IRandomValueSetter<Person>>();
             
             var valueSetterIndex = i;
-            randomValueSetterMock.Setup(x => x.SetValue(It.IsAny<Person>())).Callback(() => invocationOrder.Add(valueSetterIndex));
+            randomValueSetterMock.When(x => x.SetValue(Arg.Any<Person>()))
+                .Do(_ => invocationOrder.Add(valueSetterIndex));
 
-            valueSetterMocks[i] = randomValueSetterMock;
-            valueSetters[i] = randomValueSetterMock.Object;
+            valueSetters[i] = randomValueSetterMock;
         }
 
-        for (var i = 0; i < 10; i++)
+        var repetitions = 10;
+        for (var i = 0; i < repetitions; i++)
         {
             var complexRandomizer = new ComplexRandomizer<Person>();
             var valueSetterIndices = Enumerable.Range(0, randomizationRuleBuilders.Count).ToArray();
@@ -91,11 +91,12 @@ public class ComplexInitializationTests
             
             Assert.Equal(randomizationRuleBuilders.Count, invocationOrder.Count);
             for (var j = 0; j < randomizationRuleBuilders.Count; j++) Assert.Equal(valueSetterIndices[j], invocationOrder[j]);
-            for (var j = 0; j < randomizationRuleBuilders.Count; j++) valueSetterMocks[j].Verify(x => x.SetValue(person));
-            
+            for (var j = 0; j < randomizationRuleBuilders.Count; j++) valueSetters[j].Received(1).SetValue(person);
+
             invocationOrder.Clear();
         }
         
-        for (var i = 0; i < randomizationRuleBuilders.Count; i++) valueSetterMocks[i].VerifyNoOtherCalls();
+        for (var i = 0; i < randomizationRuleBuilders.Count; i++) 
+            Assert.Equal(repetitions, valueSetters[i].ReceivedCalls().Count());
     }
 }
